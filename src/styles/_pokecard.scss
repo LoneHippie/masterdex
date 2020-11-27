@@ -1,0 +1,89 @@
+@import "variables";
+
+.pokemon {
+    display: relative;
+}
+
+.main-display {
+    width: 92.5%;
+    margin: 0 auto;
+    margin-top: 15rem;
+    // border: 2px solid red;
+    display: grid;
+    grid-template-columns: repeat(7, auto);
+    grid-row-gap: 1.5rem;
+    justify-items: center;
+
+    &__pokecard {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 15rem;
+        height: 23.5rem;
+        border-radius: 3px;
+        box-shadow: -2px 2px 6px rgba($color-text-gray-dark, 0.6);
+
+        font-family: $font-primary;
+        color: $color-text-gray-dark;
+
+        &__info {
+            display: flex;
+            flex-direction: row;
+            margin: 0.4rem 0.55rem;
+
+            &--types {
+                width: 60%;
+
+                &:first-child {
+                    margin-right: 0.8rem;
+                }
+            }
+
+            &--number {
+                font-size: 2.75rem;
+                text-align: right;
+                width: 40%;
+            }
+        }
+
+        &--sprite {
+            width: 100%;
+        }
+
+        &--name {
+            font-size: 2rem;
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 0.5rem;
+            text-transform: capitalize;
+        }
+    }
+}
+
+.pokecard--mask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 100;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.full-card-blur {
+    position: fixed;
+    display: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(black, 0.8);
+
+    z-index: 400;
+}
+

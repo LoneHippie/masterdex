@@ -1,0 +1,18 @@
+@import "variables";
+
+*, *::after, *::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+} 
+
+html {
+    font-size: 62.5%; /* percentage equivalent of 10px, better for accessability so user can change font size unlike setting it in px */
+
+    scroll-behavior: smooth;
+}
+
+body {
+    box-sizing: border-box;
+    background: $color-background-gray-1;
+}

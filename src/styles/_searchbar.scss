@@ -1,0 +1,40 @@
+@import './variables';
+
+.searchbar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 10rem;
+    font-family: $font-primary;
+    font-weight: 200;
+    background-color: $color-background-gray-2;
+    box-shadow: 0px 5px 9px rgba(black, 0.5);
+
+    z-index: 300;
+
+    &__form {
+        position: relative;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        margin-left: 4.75rem;
+
+        input {
+            width: 25%;
+            height: 3.5rem;
+            padding-left: 0.5rem;
+            font-size: 2.5rem;
+            border-radius: 5px;
+
+            &:focus {
+                outline-color: transparent;
+                outline-style: none;
+            }
+        }
+
+        label {
+            display: none;
+        }
+    }
+}

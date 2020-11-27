@@ -1,0 +1,139 @@
+@import "variables";
+
+.pokecard-full__detailed-info {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 100%;
+}
+
+.info-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20%;
+
+    cursor: default;
+
+    &--current-label {
+        padding: 0rem 1rem;
+        font-size: 2rem;
+    }
+
+    &--switch--label {
+        cursor: pointer;
+        text-indent: -9999px;
+        width: 10rem; //everything must be 50% of this
+        height: 3rem;
+        background-color: rgba($color-background-gray-2, 0.4);
+        display: block;
+        border-radius: 100px;
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0.15rem;
+            left: 0.15rem;
+            width: 2.7rem;
+            height: 2.7rem;
+            background: #fff;
+            border-radius: 90px;
+            transition: 0.3s ease-out;
+        }
+    }
+
+    &--switch {
+        height: 0;
+        width: 0;
+        visibility: hidden;
+
+        &:checked + label {
+            background-color: rgba($color-background-gray-2, 0.4);
+        }
+
+        &:checked + label:after {
+            left: calc(100% - 0.25rem);
+            transform: translateX(-100%);
+        }
+
+        &:active:after {
+            width: 6.5rem;
+        }
+    }
+}
+
+.stat-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 80%;
+}
+
+.stat {
+    display: flex;
+    flex-direction: row;
+    font-family: $font-primary;
+
+    cursor: default;
+
+    &--label {
+        width: 20%;
+        margin-left: 0.75rem;
+        font-size: 1.5rem;
+    }
+
+    &__container {
+        width: 70%;
+        height: 2rem;
+        border-radius: 8px;
+        overflow: hidden;
+
+        &--stat {
+            height: 2rem;
+            background-color: rgba($color-background-gray-2, 0.4);
+
+            animation: statLoad 400ms ease-out;
+
+            &--value {
+                text-align: right;
+                font-size: 1.5rem;
+                margin-right: 0.5rem;
+            }
+        }
+    }
+}
+
+.move-display {
+    display: none;
+    grid-template-columns: repeat(3, auto);
+    grid-row-gap: 0.75rem;
+    justify-items: center;
+    height: 75%;
+    width: 95%;
+    padding: 1rem 0;
+    overflow-y: scroll;
+    font-family: $font-primary;
+}
+
+.move {
+    max-width: 10rem;
+    min-width: 10rem;
+    max-height: 4rem;
+    min-height: 4rem;
+    text-transform: capitalize;
+    font-size: 1.5rem;
+    text-align: center;
+    border-radius: 12px;
+
+    cursor: default;
+}
+
+@keyframes statLoad {
+    0% {
+        width: 0%;
+    }
+    100% {
+        transform: translate(0);
+    }
+}

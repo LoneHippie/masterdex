@@ -1,0 +1,33 @@
+@import "variables";
+
+.suggestions {
+    list-style: none;
+    margin-top: -0.25rem;
+    margin-left: 0.25rem;
+    padding-left: 0;
+    // border: 2px solid maroon;
+    box-shadow: -2px 8px 8px rgba($color-text-gray-dark, 0.5);
+    background-color: #fff;
+    max-height: 16.25rem;
+    min-width: 15rem;
+    max-width: 15rem;
+    border-radius: 0 0 6px 6px;
+    position: fixed;
+    overflow: scroll;
+
+    &__item {
+        font-size: 2.5rem;
+        color: $color-text-gray-dark;
+        text-align: center;
+
+        transition: all 300ms;
+
+        &:hover {
+            cursor: pointer;
+            background-color: $color-text-gray-dark;
+            color: #fff;
+
+            transition: all 300ms;
+        }
+    }
+}

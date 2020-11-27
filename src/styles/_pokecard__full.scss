@@ -1,0 +1,124 @@
+@import "variables";
+
+.pokecard-full { //is already set to flex
+    position: fixed;
+    display: none;
+    flex-direction: row;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92.5%;
+    height: 90%;
+    border-radius: 8px;
+    font-family: $font-primary;
+
+    z-index: 500;
+
+    &__general-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 25%;
+        height: 80%;
+        font-size: 4rem;
+        margin-left: 1rem;
+
+        &__type-container {
+            display: flex;
+            flex-direction: column;
+
+            span {
+                margin-right: 1rem;
+            }
+
+            div {
+                display: flex;
+                flex-direction: row;
+            }
+
+            &--type {
+                display: inline-block;
+                margin-top: 0.65rem;
+                padding: 0.5rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-radius: 20px;
+                text-align: center;
+                font-size: 2.5rem;
+                text-transform: capitalize;
+
+                &:not(:last-child) {
+                    margin-right: 1rem;
+                }
+            }
+        }
+
+        &__ability-container {
+            display: flex;
+            flex-direction: column;
+
+            span {
+                margin-right: 1rem;
+            }
+
+            .ability-flex-container {
+                display: flex;
+                flex-direction: column;
+                width: 75%;
+            }
+
+            &--ability {
+                display: inline-block;
+                margin-top: 0.65rem;
+                padding: 0.5rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-radius: 20px;
+                text-align: center;
+                font-size: 2.5rem;
+                text-transform: capitalize;
+            }
+        }
+    }
+
+    &__visual {
+        display: flex;
+        flex-direction: column;
+        width: 45%;
+        height: 100%;
+
+        &--name {
+            height: 10%;
+            margin: 0 auto;
+            text-align: center;
+            text-transform: capitalize;
+            font-size: 5rem;
+            letter-spacing: 1.5px;
+        }
+
+        &--sprite {
+            height: 90%;
+            width: 100%;
+
+            animation: spriteJump 750ms;
+        }
+    }
+}
+
+@keyframes spriteJump {
+    0% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-4rem);
+    }
+    55% {
+        transform: translateY(0);
+    }
+    70% {
+        transform: translateY(-3.5rem);
+    }
+    80% {
+        transform: translateY(0);
+    }
+}
