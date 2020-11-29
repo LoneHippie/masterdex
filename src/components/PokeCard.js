@@ -134,11 +134,15 @@ const PokeCard = (props) => {
         document.getElementById(`full-display-${e.target.id}`).style.display = "flex";
         document.getElementById(`display-${e.target.id}`).style.display = "block";
     };
-    function closeFullDisplay(e) {
+    function closeFullDisplay(e) { //need to target id='display-pk-{pokemon.data.id}, id='full-display-pk-{pokemon.data.id}'
         document.getElementById(`full-${e.target.id}`).style.display = "none";
         document.getElementById(`${e.target.id}`).style.display = "none";
     };
-    
+    function closeDisplayViaX(e) {
+        document.getElementById(`full-${e.target.id.slice(6)}`).style.display = "none";
+        document.getElementById(`${e.target.id.slice(6)}`).style.display = "none";
+    };
+
     //function for creating all ui cards by looping through prop data passed from App.js
     const allCards = props.entries.map((el, value) => {
 
@@ -173,6 +177,7 @@ const PokeCard = (props) => {
                     getContrastBg={getContrastBg}
                     typeListText={typeListText}
                     abilityListText={abilityListText}
+                    closeFullDisplay={closeDisplayViaX} //special function for closing full display specifically with X button
                 />
 
             </article>

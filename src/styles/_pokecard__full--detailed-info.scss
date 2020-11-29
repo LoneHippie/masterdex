@@ -68,6 +68,7 @@
     flex-direction: column;
     justify-content: space-around;
     height: 80%;
+    padding-bottom: 5rem;
 }
 
 .stat {
@@ -85,17 +86,17 @@
 
     &__container {
         width: 70%;
-        height: 2rem;
+        height: 2.2rem;
         border-radius: 8px;
         overflow: hidden;
 
         &--stat {
             height: 2rem;
-            background-color: rgba($color-background-gray-2, 0.4);
 
             animation: statLoad 400ms ease-out;
 
             &--value {
+                display: block;
                 text-align: right;
                 font-size: 1.5rem;
                 margin-right: 0.5rem;
@@ -119,14 +120,36 @@
 .move {
     max-width: 10rem;
     min-width: 10rem;
-    max-height: 4rem;
-    min-height: 4rem;
+    max-height: 5rem;
+    min-height: 5rem;
     text-transform: capitalize;
-    font-size: 1.5rem;
-    text-align: center;
     border-radius: 12px;
+    overflow: hidden;
 
     cursor: default;
+
+    &__info {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0 auto;
+        width: 92%;
+        font-size: 1.2rem;
+
+        &--learn-lvl {
+            display: inline-block;
+        }
+
+        &--learn-method {
+            display: inline-block;
+        }
+    }
+
+    &--name {
+        font-size: 1.75rem;
+        text-align: center;
+        margin: 0 auto;
+    }
 }
 
 @keyframes statLoad {

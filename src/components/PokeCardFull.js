@@ -60,7 +60,7 @@ const PokeCardFull = (props) => {
                 <div className="stat" key={`stat-${stats.name[i]}`}>
                     <div className="stat__container" key={`stat-container-${stats.name[i]}`} style={{border: `2px solid ${textColor(typeName)}`}}>
                         <div className="stat__container--stat" key={`stat-bar-${stats.name[i]}`} id={`stat-bar-${stats.name[i]}`} style={{width: stats.percentage[i], background: getContrastBg(typeName)}}>
-                            <div className="stat__container--stat--value" key={`stat-bar-value-${stats.name[i]}`}>{stats.value[i]}</div>
+                            <strong className="stat__container--stat--value" key={`stat-bar-value-${stats.name[i]}`}>{stats.value[i]}</strong>
                         </div>
                     </div>
                     <label className="stat--label" key={`stat-label-${stats.name[i]}`} htmlFor={`stat-bar-${stats.name[i]}`}>{stats.name[i]}</label>
@@ -72,16 +72,47 @@ const PokeCardFull = (props) => {
         
     };
 
+    const originalGen = () => {
+        let firstVersion = pokemon.data.game_indicies[0].name;
+
+        switch(true) {
+            case firstVersion === 'red' || firstVersion === 'blue' || firstVersion === 'yellow':
+                return 1;
+            case firstVersion === 'gold' || firstVersion === 'silver' || firstVersion === 'crystal':
+                return 2;
+            case firstVersion === 'ruby' || firstVersion === 'sapphire' || firstVersion === 'emerald' || firstVersion === 'firered' || firstVersion === 'leafgreen':
+                return 3;
+            case firstVersion === 'diamond' || firstVersion === 'pearl' || firstVersion === 'platinum' || firstVersion === 'heartgold' || firstVersion === 'soulsilver':
+                return 4;
+            case firstVersion === 'black' || firstVersion ==='white' || firstVersion === 'black-2' || firstVersion === 'white-2':
+                return 5;
+            default:
+                return 6; //game_indicies after gen5 are not listed but move properties should be more or less the same for every sequential gen
+        };
+    };
+
     const movePool = (input, type) => { //input = pokemon.data.moves
         return input.map((el, index) => 
-            <div className="move" key={`pk-move-${index}`} style={{background: getContrastBg(typeName), border: `2px solid ${textColor(typeName)}`}}>
-                {el.move.name}
+            <div className="move" key={`pk-move-${index}`} style={{background: getContrastBg(typeName), border: `2px solid ${textColor(typeName)}`}} onClick={() => console.log(el.version_group_details[0].move_learn_method.name)}>
+                <div className="move__info" key={`pk-move-info-${index}`}>
+                    <span className="move__info--learn-lvl" key={`pk-learn-level-${index}`}>
+                        lvl {el.version_group_details[0].level_learned_at}
+                    </span>
+                    <span className="move__info--learn-method" key={`pk-learn-method-${index}`}>
+                        {el.version_group_details[0].move_learn_method.name}
+                    </span>
+                </div>
+                <div className="move--name" key={`pk-move-${index}`}>
+                    {el.move.name}
+                </div>
             </div>
         );
     };
 
     return (
-        <section key={`pokemon-full-${pokemonIndex}`} id={`full-display-pk-${pokemon.data.id}`} className="pokecard-full" style={{background: eval(`styles.solid_${typeName}`)}}>
+        <section className="pokecard-full" key={`pokemon-full-${pokemonIndex}`} id={`full-display-pk-${pokemon.data.id}`} style={{background: eval(`styles.solid_${typeName}`)}}>
+
+            <strong className="pokecard-full--exit" style={{color: textColor(typeName)}} id={`close-display-pk-${pokemon.data.id}`} onClick={props.closeFullDisplay}>x</strong>
                     
             <div className="pokecard-full__general-info" style={{color: textColor(typeName)}}>
 

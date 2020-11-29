@@ -14,6 +14,17 @@
 
     z-index: 500;
 
+    &--exit {
+        position: absolute;
+        margin-right: 2.25rem;
+        margin-top: -0.5rem;
+        right: 0;
+        top: 0;
+        font-size: 5rem;
+
+        cursor: pointer;
+    }
+
     &__general-info {
         display: flex;
         flex-direction: column;
