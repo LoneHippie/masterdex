@@ -20,6 +20,12 @@ html {
     @include respond(phone-2) {
         font-size: 40%;
     }
+    @include respond(phone-3) {
+        font-size: 36%;
+    }
+    @include respond(phone-4) {
+        font-size: 33.5%;
+    }
 
     scroll-behavior: smooth;
 }

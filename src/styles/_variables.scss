@@ -32,6 +32,12 @@ $color-fairy: #D685AD;
 //media queries
 
 @mixin respond($breakpoint) {
+    @if $breakpoint == phone-4 {
+        @media (max-width: 21.5625em) { @content }; //345px
+    }
+    @if $breakpoint == phone-3 {
+        @media (max-width: 23.75em) { @content }; //380px
+    }
     @if $breakpoint == phone-2 {
         @media (max-width: 26.25em) { @content }; //420px
     }
