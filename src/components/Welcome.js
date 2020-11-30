@@ -11,7 +11,7 @@ const Welcome = () => {
         <section className="welcome" id="welcome">
 
             <article className="welcome-container">
-                <h1 className="welcome-container--title">WELCOME TRAINER</h1>
+                <h1 className="welcome-container--title">WELCOME&nbsp;TRAINER</h1>
                 <p className="welcome-container--paragraph">
                     Welcome to Masterdex, a handly detailed pokedex webapp! Here you can find detailed information on any pokemon from every generation either by search or browsing. If this is your first time using Masterdex, please read the instructions below before hitting continue.
                 </p>
@@ -30,7 +30,7 @@ const Welcome = () => {
                         To show more pokemon in sequential order, just click the "SHOW MORE" button
                     </li>
                 </ul>
-                <h2 className="welcome-container--instruction-title">DETAILED INFO</h2>
+                <h2 className="welcome-container--instruction-title">DETAILED&nbsp;INFO</h2>
                 <ul className="welcome-container__instruction-list">
                     <li className="welcome-container__instruction-list--item">
                         To get detailed info about any pokemon, click the card displayed on screen to open a full display of that pokemon's details, moves and stats

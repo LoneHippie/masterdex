@@ -16,33 +16,58 @@
     color: $color-text-gray-dark;
     overflow-y: scroll;
 
+    @include respond(tablet-1) {
+        width: 85%;
+        height: 92.5%;
+    }
+    @include respond(tablet-2) {
+        width: 90%;
+        height: 95%;
+    }
+
     animation: dropIn 1000ms ease-out;
 
     z-index: 1000;
 
     &--title {
-        font-size: 6.5rem;
+        font-size: 6rem;
         letter-spacing: 0.3rem;
         text-align: center;
         border-bottom: 2px solid $color-text-gray-dark;
-        width: 75%;
+        width: 80%;
         margin: 0 auto;
+
+        @include respond(tablet-3) {
+            width: 90%;
+            font-size: 5.5rem;
+        }
+        @include respond(phone-1) {
+            margin-top: 1.2rem;
+        }
     }
 
     &--paragraph {
         margin: 2rem 3rem;
         font-size: 2.2rem;
         text-align: center;
+
+        @include respond(phone-1) {
+            margin: 2rem 4rem;
+        }
     }
 
     &--instruction-title {
         margin: 0 auto;
-        width: 30%;
+        width: 40%;
         border-bottom: 2px solid $color-text-gray-dark;
         font-size: 3.5rem;
         text-align: center;
         text-transform: capitalize;
         letter-spacing: 0.2rem;
+
+        @include respond(phone-1) {
+            margin-bottom: 0.6rem;
+        }
     }
 
     &__instruction-list {
@@ -52,6 +77,11 @@
         margin-right: 12rem;
         margin-bottom: 2rem;
         font-size: 2rem;
+
+        @include respond(tablet-1) {
+            margin-left: 5rem;
+            margin-right: 5rem;
+        }
     }
 
     &__btn {
@@ -71,6 +101,12 @@
         position: relative;
         background-color: $color-background-gray-2;
         color: $color-text-gray-light;
+
+        @include respond(phone-1) {
+            margin-top: 2.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 2.7rem;
+        }
 
         transition: all 300ms;
 
