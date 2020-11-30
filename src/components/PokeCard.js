@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styles/_pokecard.scss';
-import '../styles/svg_icons.css';
+import '../styles/_svg_icons.scss';
 
 import Bug from '../images/bug.svg';
 import Dark from '../images/dark.svg';

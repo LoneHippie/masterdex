@@ -27,7 +27,7 @@ const PokeCardFull = (props) => {
     //function for getting JSX for stat bars. Starting point = el.data.stats for input
     const statBars = (input, type) => {
         let stats = {
-            name: ['HP', 'Attack', 'Defense', 'Sp. Attack', 'Sp. Defense', 'Speed', 'Total'], //name of each stat including "total"
+            name: ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed', 'Total'], //name of each stat including "total"
             value: [], //value for each individual stat
             percentage: [], //percentage for width styling
             max: [255, 190, 230, 194, 230, 180, 780], //max value of each stat

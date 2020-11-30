@@ -19,7 +19,7 @@ const LoaderButtons = (props) => {
             </div>
             <div className="loader-button-container__custom-select">
                 <select onChange={(e) => props.loadGen(e.target.value)} className="loader-button-container__custom-select--gens">
-                    <option value="0" disabled selected>GENERATION</option>
+                    <option value="0" disabled selected>GEN</option>
                     <option value="1">Gen 1</option>
                     <option value="2">Gen 2</option>
                     <option value="3">Gen 3</option>

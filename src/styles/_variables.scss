@@ -28,3 +28,29 @@ $color-dragon: #6F35FC;
 $color-dark: #705746;
 $color-steel: #B7B7CE;
 $color-fairy: #D685AD;
+
+//media queries
+
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone-2 {
+        @media (max-width: 26.25em) { @content }; //420px
+    }
+    @if $breakpoint == phone-1 {
+        @media (max-width: 29.6875em) { @content }; //475px
+    }
+    @if $breakpoint == tablet-3 {
+        @media (max-width: 32.5em) { @content }; //520px
+    }
+    @if $breakpoint == tablet-2 {
+        @media (max-width: 37.5em) { @content }; //600px
+    }
+    @if $breakpoint == tablet-1 {
+        @media (max-width: 51.875em) { @content }; //830px
+    }
+    @if $breakpoint == laptop-2 {
+        @media (max-width: 60.9375em) { @content }; //975px
+    }
+	@if $breakpoint == laptop-1 {
+		@media (max-width: 71.875em) { @content }; //1150px
+    }
+}

@@ -12,15 +12,29 @@
     border-radius: 8px;
     font-family: $font-primary;
 
+    @include respond(laptop-1) {
+        width: 97.5%;
+    }
+    @include respond(tablet-1) {
+        height: 97.5%;
+        flex-wrap: wrap;
+    }
+
     z-index: 500;
 
-    &--exit {
+    &--exit { //don't re-arrange for MQ
         position: absolute;
         margin-right: 2.25rem;
         margin-top: -0.5rem;
         right: 0;
         top: 0;
         font-size: 5rem;
+
+        @include respond(tablet-1) {
+            z-index: 1000;
+            margin-right: 1rem;
+            margin-top: -1rem;
+        }
 
         cursor: pointer;
     }
@@ -30,9 +44,21 @@
         flex-direction: column;
         justify-content: space-around;
         width: 25%;
+        @include respond(laptop-1) { width: 22.5% };
+        @include respond(laptop-2) { width: 25% };
         height: 80%;
         font-size: 4rem;
         margin-left: 1rem;
+
+        @include respond(tablet-1) {
+            width: 40%;
+            height: 60%;
+            margin-left: 0;
+            padding-left: 1rem;
+        }
+        @include respond(phone-1) {
+            height: 55%;
+        }
 
         &__type-container {
             display: flex;
@@ -98,6 +124,14 @@
         width: 45%;
         height: 100%;
 
+        @include respond(tablet-1) {
+            width: 60%;
+            height: 60%;
+        }
+        @include respond(phone-1) {
+            height: 55%;
+        }
+
         &--name {
             height: 10%;
             margin: 0 auto;
@@ -105,11 +139,21 @@
             text-transform: capitalize;
             font-size: 5rem;
             letter-spacing: 1.5px;
+            @include respond(tablet-1) {
+                height: 5%;
+                order: 1;
+                letter-spacing: 0.2rem;
+            }
         }
 
         &--sprite {
             height: 90%;
             width: 100%;
+
+            @include respond(tablet-1) {
+                height: 87.5%;
+                order: 0;
+            }
 
             animation: spriteJump 750ms;
         }

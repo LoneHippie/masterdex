@@ -16,6 +16,7 @@
 
     &__item {
         font-size: 2.5rem;
+        @include respond(tablet-1) { font-size: 4rem; }
         color: $color-text-gray-dark;
         text-align: center;
 

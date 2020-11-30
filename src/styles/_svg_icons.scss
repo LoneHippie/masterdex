@@ -1,7 +1,13 @@
+@import "variables";
+
 .icon {
     border-radius: 100%;
     height: 3.25rem;
     width: 3.25rem;
+    @include respond (tablet-1) {
+        height: 4.225rem;
+        width: 4.225rem;
+    }
     padding: 0.615rem;
     margin: auto;
     transition: 200ms all;

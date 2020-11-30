@@ -36,7 +36,7 @@ class SearchBar extends React.Component {
     render() {
         return(
             <nav className="searchbar">
-                <form onSubmit={this.onFormSubmit} className="searchbar__form">
+                <form onSubmit={this.onFormSubmit} className="searchbar__form" autoComplete="off">
                     <div className="searchbar__form--field">
                         <label>Pokemon Search</label>
                         <input
