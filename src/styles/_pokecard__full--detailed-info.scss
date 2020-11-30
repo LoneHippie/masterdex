@@ -159,8 +159,6 @@
     overflow-y: scroll;
     font-family: $font-primary;
 
-    border: 2px solid maroon;
-
     @include respond(laptop-2) {
         grid-template-columns: repeat(2, auto);
     }
