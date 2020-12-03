@@ -8,6 +8,7 @@ const PokeCardFull = (props) => {
         //pokemon.genera[7](7 is english).genus - string describing pokemon genus ('Seed Pokemon', 'Embrace Pokemon', etc)
         //pokemon.generation.name - gets string for gens like 'generation-iv'
         //pokemon.is_legendary/.is_mythical - returns true/false for these
+        //moves.damage_class_id : 1 = status, 2 = physical, 3 = special
 
     const { pokemon, pokemonIndex, moves, styles, textColor, getContrastBg, typeListText, abilityListText } = props;
 
@@ -48,7 +49,7 @@ const PokeCardFull = (props) => {
             case el.type_id === 13:
                 return el.type_id = 'electric';
             case el.type_id === 14:
-                return el.type_id = 'pyschic';
+                return el.type_id = 'psychic';
             case el.type_id === 15:
                 return el.type_id = 'ice';
             case el.type_id === 16:
@@ -143,6 +144,32 @@ const PokeCardFull = (props) => {
             return curMove.type_id;
         };
 
+        const movePP = (el) => {
+            let id = parseInt(el.move.url.slice(31).slice(0, -1), 10);
+
+            const curMove = moves.find((el) => {
+                return el.id === id;
+            });
+
+            return curMove.pp;
+        };
+
+        const moveCategory = (el) => {
+            let id = parseInt(el.move.url.slice(31).slice(0, -1), 10);
+
+            const curMove = moves.find((el) => {
+                return el.id === id;
+            });
+
+            if (curMove.damage_class_id === 1) {
+                return 'Status';
+            } else if (curMove.damage_class_id === 2) {
+                return 'Phsycial';
+            } else {
+                return 'Special';
+            };
+        };
+
         //sorting all moves first by learn method, then by level
         input.sort((a, b) => {
             return b.version_group_details[0].move_learn_method.name.length - a.version_group_details[0].move_learn_method.name.length;
@@ -158,7 +185,7 @@ const PokeCardFull = (props) => {
 
         return input.map((el, index) => 
             <div className="move" key={`pk-move-${index}`} style={{background: eval(`styles.gradient_${moveTypeColor(el)}`), color: textColor(moveTypeColor(el)), border: `2px solid ${textColor(typeName)}`}}>
-                <div className="move__info" key={`pk-move-info-${index}`}>
+                <div className="move__info" key={`pk-move-info-top-${index}`}>
                     <span className="move__info--learn-lvl" key={`pk-learn-level-${index}`}>
                         lvl {el.version_group_details[0].level_learned_at === 0 ? '-' : el.version_group_details[0].level_learned_at}
                     </span>
@@ -168,6 +195,14 @@ const PokeCardFull = (props) => {
                 </div>
                 <div className="move--name" key={`pk-move-${index}`}>
                     {el.move.name}
+                </div>
+                <div className="move__info" key={`pk-move-info-bottom-${index}`}>
+                    <span className="move__info--pp">
+                        {movePP(el)} PP
+                    </span>
+                    <span className="move__info--category">
+                        {moveCategory(el)}
+                    </span>
                 </div>
             </div>
         );

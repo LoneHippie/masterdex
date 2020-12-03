@@ -189,8 +189,8 @@
 .move {
     max-width: 10rem;
     min-width: 10rem;
-    max-height: 5rem;
-    min-height: 5rem;
+    max-height: 6rem;
+    min-height: 6rem;
     text-transform: capitalize;
     border-radius: 12px;
     overflow: hidden;
@@ -202,10 +202,10 @@
         min-height: 8rem;
     }
     @include respond(phone-1) {
-        max-width: 16.5rem;
-        min-width: 16.5rem;
-        max-height: 9rem;
-        min-height: 9rem;
+        max-width: 17.5rem;
+        min-width: 17.5rem;
+        max-height: 10rem;
+        min-height: 10rem;
     }
 
     cursor: default;
@@ -229,6 +229,14 @@
         }
 
         &--learn-method {
+            display: inline-block;
+        }
+
+        &--pp {
+            display: inline-block;
+        }
+
+        &--category {
             display: inline-block;
         }
     }
