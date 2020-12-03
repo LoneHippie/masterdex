@@ -143,7 +143,22 @@
                 height: 5%;
                 order: 1;
                 letter-spacing: 0.2rem;
+                line-height: 0.9;
+                transform: translateY(-1.5rem);
             }
+        }
+
+        &--name-jp {
+            position: relative;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-family: $font-jp;
+            font-weight: 800;
+            font-size: 6rem;
+            opacity: 0.3;
+            text-shadow: 2px 2px 2px rgba(black, 0.5);
         }
 
         &--sprite {

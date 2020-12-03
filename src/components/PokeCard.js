@@ -144,14 +144,12 @@ const PokeCard = (props) => {
     };
 
     //function for creating all ui cards by looping through prop data passed from App.js
-    const allCards = props.entries.map((el, value) => {
+    const allCards = props.pokeData.map((el, value) => {
 
         // let typeName = el.data.types[0].type.name; //shortcut for arguments
 
-        //NOTE 20/11/20 ::: make a color for normal type so when the full display for a normal pokemon pops up it isn't transparent!
-
         return (
-            <article className="pokemon" key={`pokemon-entry-${value}`}>
+            <article className="pokemon" key={`pokemon-entry-${value}`} id="pokemon-gen-point">
 
                 <PokeCardMini 
                     pokemon={el}
@@ -165,13 +163,14 @@ const PokeCard = (props) => {
                 <section 
                     key={`pokemon-full-${value}-blur`}
                     className="full-card-blur"
-                    id={`display-pk-${el.data.id}`}
+                    id={`display-pk-${el.id}`}
                     onClick={closeFullDisplay}>
                 </section>
 
                 <PokeCardFull 
                     pokemon={el}
                     pokemonIndex={value}
+                    moves={props.moveData}
                     styles={styles}
                     textColor={textColor}
                     getContrastBg={getContrastBg}

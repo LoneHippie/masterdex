@@ -8,7 +8,7 @@ const LoaderButtons = (props) => {
             <div 
                 className="loader-button-container__btn"
                 onClick={props.loadNext}
-                style={{display: `${props.limit === 893 ? 'none' : 'block'}`}}>
+                style={{display: `${props.limit === 893 || props.listMode !== 'default' ? 'none' : 'block'}`}}>
                     {props.listMode !== 'default' ? 'Back' : 'Show More'}
             </div>
             <div 

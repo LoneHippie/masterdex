@@ -4,9 +4,61 @@ import '../styles/_pokecard__full--detailed-info.scss';
 
 const PokeCardFull = (props) => {
 
-    const { pokemon, pokemonIndex, styles, textColor, getContrastBg, typeListText, abilityListText } = props;
+    //Note 2/12/20 ::: cool new properties to get info from:
+        //pokemon.genera[7](7 is english).genus - string describing pokemon genus ('Seed Pokemon', 'Embrace Pokemon', etc)
+        //pokemon.generation.name - gets string for gens like 'generation-iv'
+        //pokemon.is_legendary/.is_mythical - returns true/false for these
 
-    let typeName = pokemon.data.types[0].type.name;
+    const { pokemon, pokemonIndex, moves, styles, textColor, getContrastBg, typeListText, abilityListText } = props;
+
+    //primary type name for pokemon
+    let typeName = pokemon.types[0].type.name;
+
+    //japanese string name for pokemon
+    let nameJp = pokemon.names.filter((el => el.language.name === 'ja-Hrkt'));
+    nameJp = nameJp[0].name;
+
+    //change moves.type_id from number to type string value for styling purposes
+    moves.map(el => {
+        switch (true) {
+            case el.type_id === 1:
+                return el.type_id = 'normal';
+            case el.type_id === 2:
+                return el.type_id = 'fighting';
+            case el.type_id === 3:
+                return el.type_id = 'flying';
+            case el.type_id === 4:
+                return el.type_id = 'poison';
+            case el.type_id === 5:
+                return el.type_id = 'ground';
+            case el.type_id === 6:
+                return el.type_id = 'rock';
+            case el.type_id === 7:
+                return el.type_id = 'bug';
+            case el.type_id === 8:
+                return el.type_id = 'ghost';
+            case el.type_id === 9:
+                return el.type_id = 'steel';
+            case el.type_id === 10:
+                return el.type_id = 'fire';
+            case el.type_id === 11:
+                return el.type_id = 'water';
+            case el.type_id === 12:
+                return el.type_id = 'grass';
+            case el.type_id === 13:
+                return el.type_id = 'electric';
+            case el.type_id === 14:
+                return el.type_id = 'pyschic';
+            case el.type_id === 15:
+                return el.type_id = 'ice';
+            case el.type_id === 16:
+                return el.type_id = 'dragon';
+            case el.type_id === 17:
+                return el.type_id = 'dark';
+            case el.type_id === 18:
+                return el.type_id = 'fairy';
+        };
+    });
 
     //function for toggling between base stat and move pool view
     function toggleDisplay() {
@@ -19,9 +71,8 @@ const PokeCardFull = (props) => {
             moveDisplay.style.display = "none";
         } else {
             statDisplay.style.display = "none";
-            moveDisplay.style.display = "grid";
-        }
-
+            moveDisplay.style.display = "flex";
+        };
     };
 
     //function for getting JSX for stat bars. Starting point = el.data.stats for input
@@ -30,7 +81,7 @@ const PokeCardFull = (props) => {
             name: ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed', 'Total'], //name of each stat including "total"
             value: [], //value for each individual stat
             percentage: [], //percentage for width styling
-            max: [255, 190, 230, 194, 230, 180, 780], //max value of each stat
+            max: [255, 165, 230, 154, 230, 160, 720], //max value of each stat
             jsx: [], //jsx elements to  be returned later
 
             getTotalStats: function() {
@@ -63,40 +114,53 @@ const PokeCardFull = (props) => {
                             <strong className="stat__container--stat--value" key={`stat-bar-value-${stats.name[i]}`}>{stats.value[i]}</strong>
                         </div>
                     </div>
-                    <label className="stat--label" key={`stat-label-${stats.name[i]}`} htmlFor={`stat-bar-${stats.name[i]}`}>{stats.name[i]}</label>
+                    <label className="stat--label" key={`stat-label-${stats.name[i]}`} htmlFor={`stat-bar-${stats.name[i]}`}>
+                        {stats.name[i]}
+                    </label>
                 </div>
             );
         };
 
         return stats.jsx; //array of jsx generated from for looping over stats obj
         
-    };
+    };    
 
-    const originalGen = () => {
-        let firstVersion = pokemon.data.game_indicies[0].name;
+    const movesLevel = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'level-up');
+    const movesMachine = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'machine');
+    const movesTutor = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'tutor');
+    const movesEgg = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'egg');
 
-        switch(true) {
-            case firstVersion === 'red' || firstVersion === 'blue' || firstVersion === 'yellow':
-                return 1;
-            case firstVersion === 'gold' || firstVersion === 'silver' || firstVersion === 'crystal':
-                return 2;
-            case firstVersion === 'ruby' || firstVersion === 'sapphire' || firstVersion === 'emerald' || firstVersion === 'firered' || firstVersion === 'leafgreen':
-                return 3;
-            case firstVersion === 'diamond' || firstVersion === 'pearl' || firstVersion === 'platinum' || firstVersion === 'heartgold' || firstVersion === 'soulsilver':
-                return 4;
-            case firstVersion === 'black' || firstVersion ==='white' || firstVersion === 'black-2' || firstVersion === 'white-2':
-                return 5;
-            default:
-                return 6; //game_indicies after gen5 are not listed but move properties should be more or less the same for every sequential gen
+    const movePool = (input) => { //input = pokemon.data.moves, eventually replace the index for method and details with gen index
+
+        //this can be used for styling specific to move type
+        const moveTypeColor = (el) => {
+            let id = parseInt(el.move.url.slice(31).slice(0, -1), 10);
+
+            const curMove = moves.find((el) => {
+                return el.id === id;
+            });
+
+            return curMove.type_id;
         };
-    };
 
-    const movePool = (input, type) => { //input = pokemon.data.moves
+        //sorting all moves first by learn method, then by level
+        input.sort((a, b) => {
+            return b.version_group_details[0].move_learn_method.name.length - a.version_group_details[0].move_learn_method.name.length;
+        });
+
+        input.sort((a, b) => {
+            if (a.version_group_details[0].move_learn_method.name === 'level-up') {
+                return a.version_group_details[0].level_learned_at - b.version_group_details[0].level_learned_at;
+            } else {
+                return 0;
+            }
+        });
+
         return input.map((el, index) => 
-            <div className="move" key={`pk-move-${index}`} style={{background: getContrastBg(typeName), border: `2px solid ${textColor(typeName)}`}} onClick={() => console.log(el.version_group_details[0].move_learn_method.name)}>
+            <div className="move" key={`pk-move-${index}`} style={{background: eval(`styles.gradient_${moveTypeColor(el)}`), color: textColor(moveTypeColor(el)), border: `2px solid ${textColor(typeName)}`}}>
                 <div className="move__info" key={`pk-move-info-${index}`}>
                     <span className="move__info--learn-lvl" key={`pk-learn-level-${index}`}>
-                        lvl {el.version_group_details[0].level_learned_at}
+                        lvl {el.version_group_details[0].level_learned_at === 0 ? '-' : el.version_group_details[0].level_learned_at}
                     </span>
                     <span className="move__info--learn-method" key={`pk-learn-method-${index}`}>
                         {el.version_group_details[0].move_learn_method.name}
@@ -110,27 +174,27 @@ const PokeCardFull = (props) => {
     };
 
     return (
-        <section className="pokecard-full" key={`pokemon-full-${pokemonIndex}`} id={`full-display-pk-${pokemon.data.id}`} style={{background: eval(`styles.solid_${typeName}`)}}>
+        <section className="pokecard-full" key={`pokemon-full-${pokemonIndex}`} id={`full-display-pk-${pokemon.id}`} style={{background: eval(`styles.solid_${typeName}`)}}>
 
-            <strong className="pokecard-full--exit" style={{color: textColor(typeName)}} id={`close-display-pk-${pokemon.data.id}`} onClick={props.closeFullDisplay}>x</strong>
+            <strong className="pokecard-full--exit" style={{color: textColor(typeName)}} id={`close-display-pk-${pokemon.id}`} onClick={props.closeFullDisplay}>x</strong>
                     
             <div className="pokecard-full__general-info" style={{color: textColor(typeName)}}>
 
-                <div className="pokecard-full__general-info--id">{`Game ID: #${pokemon.data.id}`}</div>
-                <div className="pokecard-full__general-info--height">{`Height: ${pokemon.data.height / 10}m`}</div>
-                <div className="pokecard-full__general-info--weight">{`Weight: ${pokemon.data.weight / 10}kg`}</div>
+                <div className="pokecard-full__general-info--id">{`Game ID: #${pokemon.id}`}</div>
+                <div className="pokecard-full__general-info--height">{`Height: ${pokemon.height / 10}m`}</div>
+                <div className="pokecard-full__general-info--weight">{`Weight: ${pokemon.weight / 10}kg`}</div>
 
                 <div className="pokecard-full__general-info__type-container">
                     <span>Type:</span>
                     <div style={{color: textColor(typeName)}}>
-                        {typeListText(pokemon.data.types, typeName)}
+                        {typeListText(pokemon.types, typeName)}
                     </div>
                 </div>
 
                 <div className="pokecard-full__general-info__ability-container">
                     <span>Abilities:</span>
                     <div className="ability-flex-container" >
-                        {abilityListText(pokemon.data.abilities, typeName)}
+                        {abilityListText(pokemon.abilities, typeName)}
                     </div>
                 </div>
 
@@ -139,13 +203,17 @@ const PokeCardFull = (props) => {
             <div className="pokecard-full__visual">
 
                 <div className="pokecard-full__visual--name" key={`pk-name-${pokemonIndex}`} style={{color: textColor(typeName)}}>
-                    {pokemon.data.name}
+                    {pokemon.name}
+                </div>
+
+                <div className="pokecard-full__visual--name-jp" key={`pk-name-jp-${pokemonIndex}`} style={{color: pokemon.color.name}}>
+                    {nameJp}
                 </div>
 
                 <img
                     key={`pk-sprite-${pokemonIndex}`}
-                    src={pokemon.data.sprites.front_default}
-                    alt={`sprite for ${pokemon.data.name}`}
+                    src={pokemon.sprites.front_default}
+                    alt={`sprite for ${pokemon.name}`}
                     className="pokecard-full__visual--sprite"
                     style={{filter: `drop-shadow(1.5px 3px 3px #2F4F4F`}}
                 />
@@ -162,11 +230,39 @@ const PokeCardFull = (props) => {
                 </section>
                 
                 <section className="stat-display" id={`stat-display-${pokemonIndex}`} style={{color: textColor(typeName)}}>
-                    {statBars(pokemon.data.stats)}
+                    {statBars(pokemon.stats)}
                 </section>
 
-                <section className="move-display" id={`move-display-${pokemonIndex}`} style={{color: textColor(typeName)}}>
-                    {movePool(pokemon.data.moves)}
+                <section className="move-display" id={`move-display-${pokemonIndex}`}>
+
+                    <span className="move-display--title" style={{color: textColor(typeName)}}>
+                        {movePool(movesLevel).length === 0 ? '' : 'Learned Naturally:'}
+                    </span>
+                    <div className="move-display--section">
+                        {movePool(movesLevel)}
+                    </div>
+
+                    <span className="move-display--title" style={{color: textColor(typeName)}}>
+                        {movePool(movesMachine).length === 0 ? '' : 'TM/TM:'}
+                    </span>                   
+                    <div className="move-display--section">
+                        {movePool(movesMachine)}
+                    </div>
+
+                    <span className="move-display--title" style={{color: textColor(typeName)}}>
+                        {movePool(movesTutor).length === 0 ? '' : 'Tutor Moves:'}
+                    </span>
+                    <div className="move-display--section">
+                        {movePool(movesTutor)}
+                    </div>
+
+                    <span className="move-display--title" style={{color: textColor(typeName)}}>
+                        {movePool(movesEgg).length === 0 ? '' : 'Egg Moves:'}
+                    </span>                   
+                    <div className="move-display--section">
+                        {movePool(movesEgg)}
+                    </div>    
+
                 </section>
 
             </div>
