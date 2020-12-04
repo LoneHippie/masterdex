@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/_pokecard__full.scss';
 import '../styles/_pokecard__full--detailed-info.scss';
 
@@ -6,11 +6,33 @@ const PokeCardFull = (props) => {
 
     //Note 2/12/20 ::: cool new properties to get info from:
         //pokemon.genera[7](7 is english).genus - string describing pokemon genus ('Seed Pokemon', 'Embrace Pokemon', etc)
-        //pokemon.generation.name - gets string for gens like 'generation-iv'
         //pokemon.is_legendary/.is_mythical - returns true/false for these
-        //moves.damage_class_id : 1 = status, 2 = physical, 3 = special
 
     const { pokemon, pokemonIndex, moves, styles, textColor, getContrastBg, typeListText, abilityListText } = props;
+    const [gen, setGen] = useState(1);
+
+    //initializes gen hook for each pokemon
+    function initGen(input) {
+        switch(true) {
+            case input.generation.name === 'generation-i':
+                return setGen(1);
+            case input.generation.name === 'generation-ii':
+                return setGen(2);
+            case input.generation.name === 'generation-iii':
+                return setGen(3);
+            case input.generation.name === 'generation-iv':
+                return setGen(4);
+            case input.generation.name === 'generation-v':
+                return setGen(5);
+            case input.generation.name === 'generation-vi':
+                return setGen(6);
+            case input.generation.name === 'generation-vii':
+                return setGen(7);
+            case input.generation.name === 'generation-viii':
+                return setGen(8);
+        };
+    };
+    initGen(pokemon);
 
     //primary type name for pokemon
     let typeName = pokemon.types[0].type.name;
@@ -60,6 +82,56 @@ const PokeCardFull = (props) => {
                 return el.type_id = 'fairy';
         };
     });
+
+    //changes pokemon.moves.move.version_group_details.version_group.name to number equal to gen
+    pokemon.moves.forEach(el => {
+        el.version_group_details.map(el => {
+            switch(true) {
+                case el.version_group.name === 'red-blue':
+                    return el.version_group.name = 1;
+                case el.version_group.name === 'yellow':
+                    return el.version_group.name = 1;
+                case el.version_group.name === 'gold-silver':
+                    return el.version_group.name = 2;
+                case el.version_group.name === 'crystal':
+                    return el.version_group.name = 2;
+                case el.version_group.name === 'ruby-sapphire':
+                    return el.version_group.name = 3;
+                case el.version_group.name === 'emerald':
+                    return el.version_group.name = 3;
+                case el.version_group.name === 'firered-leafgreen':
+                    return el.version_group.name = 3;
+                case el.version_group.name === 'diamond-pearl':
+                    return el.version_group.name = 4;
+                case el.version_group.name === 'platinum':
+                    return el.version_group.name = 4;
+                case el.version_group.name === 'heartgold-soulsilver':
+                    return el.version_group.name = 4;
+                case el.version_group.name === 'black-white':
+                    return el.version_group.name = 5;
+                case el.version_group.name === 'black-2-white-2':
+                    return el.version_group.name = 5;
+                case el.version_group.name === 'x-y':
+                    return el.version_group.name = 6;
+                case el.version_group.name === 'omega-ruby-alpha-sapphire':
+                    return el.version_group.name =6;
+                case el.version_group.name === 'sun-moon':
+                    return el.version_group.name = 7;
+                case el.version_group.name === 'ultra-sun-ultra-moon':
+                    return el.version_group.name = 7;
+            };
+        });
+    });
+
+    //closest I've got it to working so far. Disabled for current push to master
+    // pokemon.moves.forEach(move => {
+    //     move.version_group_details.map((el, val) => {
+    //         switch(true) {
+    //             case el.move_learn_method.name === 'level-up' && el.version_group.name === gen:
+    //                 return move.genIndex = val;
+    //         };
+    //     });
+    // });
 
     //function for toggling between base stat and move pool view
     function toggleDisplay() {
@@ -126,12 +198,64 @@ const PokeCardFull = (props) => {
         
     };    
 
+    const getGenSelect = (input) => {
+
+        //changes current pokemon.generation.name to number value corresponding to generation number
+        switch(true) {
+            case input.generation.name === 'generation-i':
+                return input.generation.name = 1;
+            case input.generation.name === 'generation-ii':
+                return input.generation.name = 2;
+            case input.generation.name === 'generation-iii':
+                return input.generation.name = 3;
+            case input.generation.name === 'generation-iv':
+                return input.generation.name = 4;
+            case input.generation.name === 'generation-v':
+                return input.generation.name = 5;
+            case input.generation.name === 'generation-vi':
+                return input.generation.name = 6;
+            case input.generation.name === 'generation-vii':
+                return input.generation.name = 7;
+            case input.generation.name === 'generation-viii':
+                return input.generation.name = 8;
+        };
+
+        //empty array to push JSX elements
+        let selectOptions = [];
+        //first geneation current pokemon appears in
+        const firstGen = input.generation.name;
+        //initial select option for firstGen, selected by default on load
+        selectOptions.push(<option key={`gen-select-${firstGen}`} value={firstGen} selected>{`Gen ${firstGen}`}</option>);
+
+        //pushing new select options in for each gen between firstGen and gen 8
+        if (firstGen !== 8) {
+            for (let i = (firstGen + 1); i <= 8; i++) {
+                selectOptions.push(
+                    <option key={`gen-select-${i}`} value={i}>{`Gen ${i}`}</option>
+                );
+            };
+        };
+
+        return selectOptions;
+    };
+
+    //splitting current pokemon move list by learn method for organization
     const movesLevel = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'level-up');
     const movesMachine = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'machine');
     const movesTutor = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'tutor');
     const movesEgg = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'egg');
 
-    const movePool = (input) => { //input = pokemon.data.moves, eventually replace the index for method and details with gen index
+    //function for generation move pool
+    const movePool = (input) => { //input = pokemon.moves, eventually replace the index for method and details with gen index
+
+        //filters out moves that don't exist in whatever gen is currently selected per pokemon
+        input = input.filter((el) => {
+            let id = parseInt(el.move.url.slice(31).slice(0, -1), 10);
+
+            if (moves[id].generation_id <= gen) {
+                return el;
+            };
+        });
 
         //this can be used for styling specific to move type
         const moveTypeColor = (el) => {
@@ -144,6 +268,7 @@ const PokeCardFull = (props) => {
             return curMove.type_id;
         };
 
+        //gets PP value for each move
         const movePP = (el) => {
             let id = parseInt(el.move.url.slice(31).slice(0, -1), 10);
 
@@ -154,6 +279,7 @@ const PokeCardFull = (props) => {
             return curMove.pp;
         };
 
+        //gets category of each move (status, physical, special)
         const moveCategory = (el) => {
             let id = parseInt(el.move.url.slice(31).slice(0, -1), 10);
 
@@ -182,6 +308,8 @@ const PokeCardFull = (props) => {
                 return 0;
             }
         });
+
+        // let genIndex = (el) => el.genIndex === undefined ? 0 : el.genIndex;
 
         return input.map((el, index) => 
             <div className="move" key={`pk-move-${index}`} style={{background: eval(`styles.gradient_${moveTypeColor(el)}`), color: textColor(moveTypeColor(el)), border: `2px solid ${textColor(typeName)}`}}>
@@ -251,6 +379,7 @@ const PokeCardFull = (props) => {
                     alt={`sprite for ${pokemon.name}`}
                     className="pokecard-full__visual--sprite"
                     style={{filter: `drop-shadow(1.5px 3px 3px #2F4F4F`}}
+                    onClick={() => console.log(pokemon)}
                 />
 
             </div>
@@ -269,6 +398,20 @@ const PokeCardFull = (props) => {
                 </section>
 
                 <section className="move-display" id={`move-display-${pokemonIndex}`}>
+
+                    <div className="move-display__custom-select">
+                        <select
+                            className="move-display__custom-select--gens"
+                            style={{
+                                color: textColor(typeName),
+                                background: getContrastBg(typeName),
+                                border: `2px solid ${textColor(typeName)}`
+                            }}
+                            onChange={(e) => setGen(e.target.value)}
+                        >
+                            {getGenSelect(pokemon)}
+                        </select>
+                    </div>
 
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
                         {movePool(movesLevel).length === 0 ? '' : 'Learned Naturally:'}
