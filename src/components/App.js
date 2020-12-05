@@ -10,15 +10,14 @@ class App extends React.Component {
 
     state = { pokeData: [], moves: this.props.moveData, pokeLimit: 25, currentList: null, listMode: 'default' };
 
-    //NOTE 30/11/20 ::: Look into getting info on the pokemon's initial generation and other details by making calls to v2/pokemon-species/{id}, all the ids/numbers for these calls match the pokemon id numbers from standard calls
-    //NOTE 30/11/20 ::: Make another select/option button next to the toggle switch in full display to select a generation. First option should always be the first gen the entry appears in and it should change the info for moves and flavor text (when added later)
     //NOTE 30/11/20 ::: Maybe add a star next to stats that are maxed on the bar to indicate that this pokemon has the highest possible of given stat
     //NOTE 1/12/20 ::: Look into finding a better solution for stoping API for loop calls when another search is made. Currently it kind of works but it's not perfect
     //NOTE 1/12/20 ::: Figure out how to remove the first pokecard in the list from the DOM/view when doing a new search while another loop is going to get rid of the extra element
+    //NOTE 5/12/20 ::: Think of adding a new button in place of load all to load 10-25 pokemon at a time by stats (attack will get top 10 pokemon with highest attack, def with top 10 def, so on)
+    //NOTE 5/12/20 ::: Maybe to fix problem with calling onSearchSubmit (type) and loadGen make them call seperate functions with a switch case, like if term === 'fairy', call loadTypeFiary(), or if gen === 1, call loadGen1()
+
 
     componentDidMount() {
-        // console.log(this.state.moves);
-        // console.log(this.state.moves[78].type_id);
         //generating state for all pokemon API fetches
         this.populatePokeData(this.state.pokeLimit);
     };
@@ -85,35 +84,6 @@ class App extends React.Component {
         }
     };
 
-    loadAllPokemon = async () => {
-        //empty array to loop over els for API calls
-        let emptyArr = [];
-
-        //filling array with every number needed for API calls: currently 893 pokemon
-        for (let i = this.state.pokeLimit; i <= 893; i++) {
-            emptyArr.push(i);
-        };
-
-        this.setState({pokeLimit: 893});
-        this.setState({listMode: 'default'});
-
-        //loop through emptyArr to numerically call data for each pokemon in order and push into pokeList state
-        try {
-            for (const el of emptyArr) {
-                const pokemon = await pokeapi.get(`/pokemon/${el}`);
-                const species = await pokeapi.get(`/pokemon-species/${el}`);
-
-                if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                    this.setState((prevState => {
-                        return prevState.pokeData.push({...species.data, ...pokemon.data});
-                    }));
-                };
-            };
-        } catch(error) {
-            console.log('Error return from App.js loadAllPokemon:');
-            console.log(error);
-        };
-    };
 
     onSearchSubmit = async (term) => {
         //clear currently rendered entries from screen/DOM
@@ -235,7 +205,6 @@ class App extends React.Component {
                 <LoaderButtons 
                     limit={this.state.pokeLimit}
                     loadNext={this.loadMorePokemon}
-                    loadAll={this.loadAllPokemon}
                     listMode={this.state.listMode}
                     loadGen={this.loadGen}
                 />

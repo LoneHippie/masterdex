@@ -146,8 +146,6 @@ const PokeCard = (props) => {
     //function for creating all ui cards by looping through prop data passed from App.js
     const allCards = props.pokeData.map((el, value) => {
 
-        // let typeName = el.data.types[0].type.name; //shortcut for arguments
-
         return (
             <article className="pokemon" key={`pokemon-entry-${value}`} id="pokemon-gen-point">
 

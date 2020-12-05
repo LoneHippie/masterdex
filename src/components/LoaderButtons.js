@@ -11,12 +11,6 @@ const LoaderButtons = (props) => {
                 style={{display: `${props.limit === 893 || props.listMode !== 'default' ? 'none' : 'block'}`}}>
                     {props.listMode !== 'default' ? 'Back' : 'Show More'}
             </div>
-            <div 
-                className="loader-button-container__btn"
-                onClick={props.loadAll}
-                style={{display: `${props.limit === 893 || props.listMode !== 'default' ? 'none' : 'block'}`}}>
-                    Load all
-            </div>
             <div className="loader-button-container__custom-select">
                 <select onChange={(e) => props.loadGen(e.target.value)} className="loader-button-container__custom-select--gens">
                     <option value="0" disabled selected>GEN</option>
