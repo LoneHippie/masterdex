@@ -11,7 +11,7 @@ class App extends React.Component {
     state = {
         pokeData: [],
         moves: this.props.moveData,
-        pokeLimit: 25,
+        pokeLimit: 10,
         currentList: null,
         listMode: 'default',
         typeSearch: 'none',
@@ -45,6 +45,12 @@ class App extends React.Component {
                     return prevState.pokeData.push({...species.data, ...pokemon.data});
                 }));
             };
+
+            //clean up for extra cards after loop has finished
+            if (this.state.pokeData.length > this.state.pokeLimit) {
+                let parent = document.querySelector('.main-display');
+                parent.firstElementChild.style.display = "none";
+            };
         } catch (error) {
             console.log('Error return from populatePokeData');
             console.log(error);
@@ -61,13 +67,13 @@ class App extends React.Component {
             let emptyArr = [];
 
             //filling array with every number needed for API calls: currently 893 pokemon
-            for (let i = this.state.pokeLimit + 1; i <= this.state.pokeLimit + 25; i++) {
+            for (let i = this.state.pokeLimit + 1; i <= this.state.pokeLimit + 10; i++) {
                 emptyArr.push(i);
             };
 
             //updating pokeLimit for incrimental/repeat usage
             this.setState((prevState) => {
-                return prevState.pokeLimit += 25;
+                return prevState.pokeLimit += 10;
             });
 
             //loop through emptyArr to numerically call data for each pokemon in order and push into pokeList state
@@ -735,6 +741,16 @@ class App extends React.Component {
                             parent.lastElementChild.style.display = "none";
                         }
                     }, 1000);
+                    setTimeout(() => {
+                        if (parent.childNodes.length !== 1) {
+                            parent.lastElementChild.style.display = "none";
+                        }
+                    }, 2000);
+                    setTimeout(() => {
+                        if (parent.childNodes.length !== 1) {
+                            parent.lastElementChild.style.display = "none";
+                        }
+                    }, 3000);
                 };
             }
         } catch(error) {

@@ -149,7 +149,7 @@ const PokeCardFull = (props) => {
     };
 
     //function for getting JSX for stat bars. Starting point = el.data.stats for input
-    const statBars = (input, type) => {
+    const statBars = (input) => {
         let stats = {
             name: ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed', 'Total'], //name of each stat including "total"
             value: [], //value for each individual stat
