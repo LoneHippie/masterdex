@@ -44,11 +44,11 @@ class App extends React.Component {
                 this.setState((prevState => {
                     return prevState.pokeData.push({...species.data, ...pokemon.data});
                 }));
-            }
+            };
         } catch (error) {
             console.log('Error return from populatePokeData');
             console.log(error);
-        }
+        };
     };
 
     loadMorePokemon = async () => { //NOTE::: pokeLimit and any hardcoded number in this function will need to be updated manually
@@ -696,6 +696,7 @@ class App extends React.Component {
         };
     }
 
+////////// FUNCTION FOR SINGLE, REFRESH AND TYPE SEARCH //////////
 
     onSearchSubmit = async (term) => {
         //clear currently rendered entries from screen/DOM
@@ -720,12 +721,20 @@ class App extends React.Component {
                         this.setState({pokeData: []});
                         this.populatePokeData(this.state.pokeLimit);
                     }
-                } else {
+                } else { //single pokemon return
                     this.setState({listMode: 'search'});
                     this.setState({pokeData: []});
                     this.setState((prevState => {
                         return prevState.pokeData.push({...species.data, ...pokemon.data});
                     }));
+
+                    //clean-up for extra cards leftover from active loops, turns display to none for last element
+                    let parent = document.querySelector('.main-display');
+                    setTimeout(() => {
+                        if (parent.childNodes.length !== 1) {
+                            parent.lastElementChild.style.display = "none";
+                        }
+                    }, 1000);
                 };
             }
         } catch(error) {
@@ -1028,7 +1037,6 @@ class App extends React.Component {
             console.log(error);
         };
     };
-
 
 ////////// RENDER/RETURN //////////
 
