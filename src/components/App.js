@@ -19,7 +19,7 @@ class App extends React.Component {
     };
 
     //NOTE 30/11/20 ::: Maybe add a star next to stats that are maxed on the bar to indicate that this pokemon has the highest possible of given stat
-    //NOTE 1/12/20 ::: Figure out how to remove the first pokecard in the list from the DOM/view when doing a new search while another loop is going to get rid of the extra element
+    //NOTE 1/12/20 ::: Figure out how to remove the first pokecard in the list from the DOM/view when doing a new search while another loop is going to get rid of the extra element <<<<<
     //NOTE 5/12/20 ::: Think of adding a new button in place of load all to load 10-25 pokemon at a time by stats (attack will get top 10 pokemon with highest attack, def with top 10 def, so on)
     //NOTE 5/12/20 ::: Made seperate async functions for each instance of generating pokeData for gen and type, working GREAT now
 

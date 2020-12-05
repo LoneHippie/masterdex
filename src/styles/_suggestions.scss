@@ -10,6 +10,10 @@
     max-height: 16.25rem;
     min-width: 15rem;
     max-width: 15rem;
+    @include respond(tablet-1) {
+        min-width: 25rem;
+        max-width: 25rem;
+    }
     border-radius: 0 0 6px 6px;
     position: fixed;
     overflow: scroll;
