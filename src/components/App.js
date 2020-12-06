@@ -22,7 +22,7 @@ class App extends React.Component {
     //NOTE 1/12/20 ::: Figure out how to remove the first pokecard in the list from the DOM/view when doing a new search while another loop is going to get rid of the extra element <<<<<
     //NOTE 5/12/20 ::: Think of adding a new button in place of load all to load 10-25 pokemon at a time by stats (attack will get top 10 pokemon with highest attack, def with top 10 def, so on)
     //NOTE 5/12/20 ::: Made seperate async functions for each instance of generating pokeData for gen and type, working GREAT now
-
+    //If I want to deploy this officially, look into cloudflare to speed up loading times
 
     componentDidMount() {
         //generating state for all pokemon API fetches
@@ -188,6 +188,20 @@ class App extends React.Component {
                     return prevState.pokeData.push({...species.data, ...pokemon.data});
                 }));
             };
+
+            //clean up, still needs fixing.
+            // setTimeout(() => {
+            //     for (let i = 0; i <= 10; i++) {
+            //         if (this.state.pokeData[i] !== undefined) {
+            //             let isCorrectCard = this.state.pokeData[i].types.some(el => el.type.name === type); //will return true if one matches
+            //             if (!isCorrectCard) {
+            //                 //remove el from display
+            //                 let parent = document.querySelector('.main-display');
+            //                 parent.childNodes[i].style.display = 'none';
+            //             };
+            //         }
+            //     }
+            // }, 2000);
         };
     }
 
