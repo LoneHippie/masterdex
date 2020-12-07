@@ -19,10 +19,8 @@ class App extends React.Component {
     };
 
     //NOTE 30/11/20 ::: Maybe add a star next to stats that are maxed on the bar to indicate that this pokemon has the highest possible of given stat
-    //NOTE 1/12/20 ::: Figure out how to remove the first pokecard in the list from the DOM/view when doing a new search while another loop is going to get rid of the extra element <<<<<
     //NOTE 5/12/20 ::: Think of adding a new button in place of load all to load 10-25 pokemon at a time by stats (attack will get top 10 pokemon with highest attack, def with top 10 def, so on)
-    //NOTE 5/12/20 ::: Made seperate async functions for each instance of generating pokeData for gen and type, working GREAT now
-    //If I want to deploy this officially, look into cloudflare to speed up loading times
+    //NOTE 7/12/20 ::: Made build more stable, light for all extra card issues implimented successfully, condensed code
 
     componentDidMount() {
         //generating state for all pokemon API fetches
@@ -99,7 +97,8 @@ class App extends React.Component {
 
 ////////// FUNCTIONS FOR TYPE //////////
     
-    searchByType = async (term) => {
+    //switch for calling proper type return function
+    searchByType = (term) => {
         switch(true) {
             case term === 'fire':
                 this.getTypeFire(term);
@@ -160,13 +159,28 @@ class App extends React.Component {
         }
     };
 
-    getTypeFire = async(type) => {
-
+    //prototype function for all type return functions
+    getTypeAndCleanup = async(type) => {
         this.setState({listMode: 'type'});
         this.setState({pokeData: []});
         this.setState({typeSearch: type});
 
         const response = await pokeapi.get(`/type/${type}`);
+
+        //clean up, so far works
+        const cleanup = setTimeout(() => {
+            for (let i = 0; i <= 10; i++) {
+                if (this.state.pokeData[i] !== undefined) {
+                    let isCorrectCard = this.state.pokeData[i].types.some(el => el.type.name === type); //will return true if one matches
+                    if (!isCorrectCard) {
+                        //remove el from display
+                        let parent = document.querySelector('.main-display');
+                        parent.childNodes[i].style.display = 'none';
+                        clearTimeout(cleanup);
+                    };
+                };
+            };
+        }, 2000);
 
         for (let i = 0; i <= response.data.pokemon.length; i++) {
             if (this.state.listMode !== 'type') { break; };
@@ -188,540 +202,84 @@ class App extends React.Component {
                     return prevState.pokeData.push({...species.data, ...pokemon.data});
                 }));
             };
-
-            //clean up, still needs fixing.
-            // setTimeout(() => {
-            //     for (let i = 0; i <= 10; i++) {
-            //         if (this.state.pokeData[i] !== undefined) {
-            //             let isCorrectCard = this.state.pokeData[i].types.some(el => el.type.name === type); //will return true if one matches
-            //             if (!isCorrectCard) {
-            //                 //remove el from display
-            //                 let parent = document.querySelector('.main-display');
-            //                 parent.childNodes[i].style.display = 'none';
-            //             };
-            //         }
-            //     }
-            // }, 2000);
         };
-    }
+    };
+
+    getTypeFire = (type) => {
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeNormal = async(type) => {
-
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/normal`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeGrass = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeWater = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeFighting = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeFlying = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypePoison = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All poison pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeGround = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ground pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeRock = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeBug = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeGhost = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeElectric = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypePsychic = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeIce = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeDragon = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeDark = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeSteel = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
     getTypeFairy = async(type) => {
-        this.setState({listMode: 'type'});
-        this.setState({pokeData: []});
-        this.setState({typeSearch: type});
-
-        const response = await pokeapi.get(`/type/${type}`);
-
-        for (let i = 0; i <= response.data.pokemon.length; i++) {
-            if (this.state.listMode !== 'type') { break; };
-            if (this.state.typeSearch !== type) { break; };
-            
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon[i].pokemon.url.slice(34).slice(0, -1)}`);
-            //break condition in case max id is reached
-            if (pokemon.data.id >= 893) {
-                console.log(`All ${type} pokemon entries rendered`);
-                console.log(`Current entries in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //pokemon id 808 and 809 are currently broken and have empty stat arrays
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                }));
-            };
-        };
-    }
+        this.getTypeAndCleanup(type);
+    };
 
 ////////// FUNCTION FOR SINGLE, REFRESH AND TYPE SEARCH //////////
 
     onSearchSubmit = async (term) => {
-        //clear currently rendered entries from screen/DOM
-        document.getElementById('pokemon-gen-point').innerHTML = '';
-
         try {
             if (term === 'fire' || term === 'normal' || term === 'grass' || term === 'water' || term === 'fighting' || term === 'flying' || term === 'poison' || term === 'ground' || term === 'rock' || term === 'bug' || term === 'ghost' || term === 'electric' || term === 'psychic' || term === 'ice' || term === 'dragon' || term === 'dark' || term === 'steel' || term === 'fairy') { //check to see if term is a type string
 
@@ -775,7 +333,7 @@ class App extends React.Component {
 
 ////////// FUNCTIONS FOR GEN //////////
     
-    searchByGen = async (generation) => {
+    searchByGen = (generation) => {
         switch(true) {
             case generation === '1':
                 this.getGen1(generation);
@@ -806,12 +364,59 @@ class App extends React.Component {
         };
     };
 
-    getGen1 = async(gen) => {
+    getGenAndCleanup = async(gen) => {
         this.setState({listMode: 'gen'});
         this.setState({pokeData: []});
         this.setState({genSearch: gen});
 
         const response = await pokeapi.get(`/generation/${gen}`); //returns array with pokemon_species property containing all names and urls for generation
+
+        //cleanup for extra cards
+        const cleanup = setTimeout(() => {
+            for (let i = 0; i <= 10; i++) {
+
+                let isCorrectCard;
+
+                if (this.state.pokeData[i] !== undefined) {
+                    switch(true) {
+                        case gen === 1 || gen === '1':
+                            isCorrectCard = this.state.pokeData[i].id <= 151 ? true : false;
+                            break;
+                        case gen === 2 || gen === '2':
+                            isCorrectCard = this.state.pokeData[i].id > 151 && this.state.pokeData[i] <= 251 ? true : false;
+                            break;
+                        case gen === 3 || gen === '3':
+                            isCorrectCard = this.state.pokeData[i].id > 251 && this.state.pokeData[i].id <= 386 ? true : false;
+                            break;
+                        case gen === 4 || gen === '4':
+                            isCorrectCard = this.state.pokeData[i].id > 386 && this.state.pokeData[i].id <= 493 ? true : false;
+                            break;
+                        case gen === 5 || gen === '5':
+                            isCorrectCard = this.state.pokeData[i].id > 493 && this.state.pokeData[i].id <= 649 ? true : false;
+                            break;
+                        case gen === 6 || gen === '6':
+                            isCorrectCard = this.state.pokeData[i].id > 649 && this.state.pokeData[i].id <= 721 ? true : false;
+                            break;
+                        case gen === 7 || gen === '7':
+                            isCorrectCard = this.state.pokeData[i].id > 721 && this.state.pokeData[i].id <= 809 ? true : false;
+                            break;
+                        case gen === 8 || gen === '8':
+                            isCorrectCard = this.state.pokeData[i].id > 809 ? true : false;
+                            break;
+                        default:
+                            break;
+                    };
+
+                    if (!isCorrectCard) {
+                        console.log(this.state.pokeData[i].name);
+                        //remove el from display
+                        let parent = document.querySelector('.main-display');
+                        parent.childNodes[i].style.display = 'none';
+                        clearTimeout(cleanup);
+                    };
+                };
+            };
+        }, 2000);
 
         //loop through all returned ids (sliced to extract ID instead of name, which sometimes doesn't match API call name)
         for (let i = 0; i < response.data.pokemon_species.length; i++) {
@@ -837,227 +442,39 @@ class App extends React.Component {
         };
     };
 
-    getGen2 = async(gen) => {
-        this.setState({listMode: 'gen'});
-        this.setState({pokeData: []});
-        this.setState({genSearch: gen});
-
-        const response = await pokeapi.get(`/generation/${gen}`); //returns array with pokemon_species property containing all names and urls for generation
-
-        //loop through all returned ids (sliced to extract ID instead of name, which sometimes doesn't match API call name)
-        for (let i = 0; i < response.data.pokemon_species.length; i++) {
-            if (this.state.listMode !== 'gen') { break; };
-            if (this.state.genSearch !== gen) { break; };
-
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-
-            if (pokemon.data.id >= 893) { //break condition to avoid getting "extra" pk (megas, etc)
-                console.log(`All gen ${gen} pokemon entries rendered`);
-                console.log(`Current pokemon in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //condition for pushing API returns into both species and poke lists
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState) => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                });
-            };
-        };
+    getGen1 = (gen) => {
+        this.getGenAndCleanup(gen);
     };
 
-    getGen3 = async(gen) => {
-        this.setState({listMode: 'gen'});
-        this.setState({pokeData: []});
-        this.setState({genSearch: gen});
-
-        const response = await pokeapi.get(`/generation/${gen}`); //returns array with pokemon_species property containing all names and urls for generation
-
-        //loop through all returned ids (sliced to extract ID instead of name, which sometimes doesn't match API call name)
-        for (let i = 0; i < response.data.pokemon_species.length; i++) {
-            if (this.state.listMode !== 'gen') { break; };
-            if (this.state.genSearch !== gen) { break; };
-
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-
-            if (pokemon.data.id >= 893) { //break condition to avoid getting "extra" pk (megas, etc)
-                console.log(`All gen ${gen} pokemon entries rendered`);
-                console.log(`Current pokemon in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //condition for pushing API returns into both species and poke lists
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState) => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                });
-            };
-        };
+    getGen2 = (gen) => {
+        this.getGenAndCleanup(gen);
     };
 
-    getGen4 = async(gen) => {
-        this.setState({listMode: 'gen'});
-        this.setState({pokeData: []});
-        this.setState({genSearch: gen});
-
-        const response = await pokeapi.get(`/generation/${gen}`); //returns array with pokemon_species property containing all names and urls for generation
-
-        //loop through all returned ids (sliced to extract ID instead of name, which sometimes doesn't match API call name)
-        for (let i = 0; i < response.data.pokemon_species.length; i++) {
-            if (this.state.listMode !== 'gen') { break; };
-            if (this.state.genSearch !== gen) { break; };
-
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-
-            if (pokemon.data.id >= 893) { //break condition to avoid getting "extra" pk (megas, etc)
-                console.log(`All gen ${gen} pokemon entries rendered`);
-                console.log(`Current pokemon in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //condition for pushing API returns into both species and poke lists
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState) => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                });
-            };
-        };
+    getGen3 = (gen) => {
+        this.getGenAndCleanup(gen);
     };
 
-    getGen5 = async(gen) => {
-        this.setState({listMode: 'gen'});
-        this.setState({pokeData: []});
-        this.setState({genSearch: gen});
-
-        const response = await pokeapi.get(`/generation/${gen}`); //returns array with pokemon_species property containing all names and urls for generation
-
-        //loop through all returned ids (sliced to extract ID instead of name, which sometimes doesn't match API call name)
-        for (let i = 0; i < response.data.pokemon_species.length; i++) {
-            if (this.state.listMode !== 'gen') { break; };
-            if (this.state.genSearch !== gen) { break; };
-
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-
-            if (pokemon.data.id >= 893) { //break condition to avoid getting "extra" pk (megas, etc)
-                console.log(`All gen ${gen} pokemon entries rendered`);
-                console.log(`Current pokemon in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //condition for pushing API returns into both species and poke lists
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState) => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                });
-            };
-        };
+    getGen4 = (gen) => {
+        this.getGenAndCleanup(gen);
     };
 
-    getGen6 = async(gen) => {
-        this.setState({listMode: 'gen'});
-        this.setState({pokeData: []});
-        this.setState({genSearch: gen});
-
-        const response = await pokeapi.get(`/generation/${gen}`); //returns array with pokemon_species property containing all names and urls for generation
-
-        //loop through all returned ids (sliced to extract ID instead of name, which sometimes doesn't match API call name)
-        for (let i = 0; i < response.data.pokemon_species.length; i++) {
-            if (this.state.listMode !== 'gen') { break; };
-            if (this.state.genSearch !== gen) { break; };
-
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-
-            if (pokemon.data.id >= 893) { //break condition to avoid getting "extra" pk (megas, etc)
-                console.log(`All gen ${gen} pokemon entries rendered`);
-                console.log(`Current pokemon in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //condition for pushing API returns into both species and poke lists
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState) => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                });
-            };
-        };
+    getGen5 = (gen) => {
+        this.getGenAndCleanup(gen);
     };
 
-    getGen7 = async(gen) => {
-        this.setState({listMode: 'gen'});
-        this.setState({pokeData: []});
-        this.setState({genSearch: gen});
-
-        const response = await pokeapi.get(`/generation/${gen}`); //returns array with pokemon_species property containing all names and urls for generation
-
-        //loop through all returned ids (sliced to extract ID instead of name, which sometimes doesn't match API call name)
-        for (let i = 0; i < response.data.pokemon_species.length; i++) {
-            if (this.state.listMode !== 'gen') { break; };
-            if (this.state.genSearch !== gen) { break; };
-
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-
-            if (pokemon.data.id >= 893) { //break condition to avoid getting "extra" pk (megas, etc)
-                console.log(`All gen ${gen} pokemon entries rendered`);
-                console.log(`Current pokemon in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //condition for pushing API returns into both species and poke lists
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState) => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                });
-            };
-        };
+    getGen6 = (gen) => {
+        this.getGenAndCleanup(gen);
     };
 
-    getGen8 = async(gen) => {
-        this.setState({listMode: 'gen'});
-        this.setState({pokeData: []});
-        this.setState({genSearch: gen});
+    getGen7 = (gen) => {
+        this.getGenAndCleanup(gen);
+    };
 
-        const response = await pokeapi.get(`/generation/${gen}`); //returns array with pokemon_species property containing all names and urls for generation
-
-        //loop through all returned ids (sliced to extract ID instead of name, which sometimes doesn't match API call name)
-        for (let i = 0; i < response.data.pokemon_species.length; i++) {
-            if (this.state.listMode !== 'gen') { break; };
-            if (this.state.genSearch !== gen) { break; };
-
-            const pokemon = await pokeapi.get(`/pokemon/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-            const species = await pokeapi.get(`/pokemon-species/${response.data.pokemon_species[i].url.slice(42).slice(0, -1)}`);
-
-            if (pokemon.data.id >= 893) { //break condition to avoid getting "extra" pk (megas, etc)
-                console.log(`All gen ${gen} pokemon entries rendered`);
-                console.log(`Current pokemon in mounted component: ${this.state.pokeData.length}`);
-                
-                break; 
-            };
-
-            //condition for pushing API returns into both species and poke lists
-            if (pokemon.data.id !== 808 && pokemon.data.id !== 809) {
-                this.setState((prevState) => {
-                    return prevState.pokeData.push({...species.data, ...pokemon.data});
-                });
-            };
-        };
+    getGen8 = (gen) => {
+        this.getGenAndCleanup(gen);
     };
 
     loadGen = async(generation) => {
-        //clear currently rendered entries from screen/DOM
-        document.getElementById('pokemon-gen-point').innerHTML = '';
-
         try {
 
             this.searchByGen(generation);
