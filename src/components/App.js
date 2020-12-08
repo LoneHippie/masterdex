@@ -21,6 +21,7 @@ class App extends React.Component {
     //NOTE 30/11/20 ::: Maybe add a star next to stats that are maxed on the bar to indicate that this pokemon has the highest possible of given stat
     //NOTE 5/12/20 ::: Think of adding a new button in place of load all to load 10-25 pokemon at a time by stats (attack will get top 10 pokemon with highest attack, def with top 10 def, so on)
     //NOTE 7/12/20 ::: Made build more stable, light for all extra card issues implimented successfully, condensed code
+    //NOTE 8/12/20 ::: Bug fixed for gen 2 cleanup
 
     componentDidMount() {
         //generating state for all pokemon API fetches
@@ -209,71 +210,71 @@ class App extends React.Component {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeNormal = async(type) => {
+    getTypeNormal = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeGrass = async(type) => {
+    getTypeGrass = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeWater = async(type) => {
+    getTypeWater = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeFighting = async(type) => {
+    getTypeFighting = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeFlying = async(type) => {
+    getTypeFlying = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypePoison = async(type) => {
+    getTypePoison = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeGround = async(type) => {
+    getTypeGround = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeRock = async(type) => {
+    getTypeRock = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeBug = async(type) => {
+    getTypeBug = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeGhost = async(type) => {
+    getTypeGhost = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeElectric = async(type) => {
+    getTypeElectric = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypePsychic = async(type) => {
+    getTypePsychic = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeIce = async(type) => {
+    getTypeIce = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeDragon = async(type) => {
+    getTypeDragon = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeDark = async(type) => {
+    getTypeDark = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeSteel = async(type) => {
+    getTypeSteel = (type) => {
         this.getTypeAndCleanup(type);
     };
 
-    getTypeFairy = async(type) => {
+    getTypeFairy = (type) => {
         this.getTypeAndCleanup(type);
     };
 
@@ -383,7 +384,7 @@ class App extends React.Component {
                             isCorrectCard = this.state.pokeData[i].id <= 151 ? true : false;
                             break;
                         case gen === 2 || gen === '2':
-                            isCorrectCard = this.state.pokeData[i].id > 151 && this.state.pokeData[i] <= 251 ? true : false;
+                            isCorrectCard = this.state.pokeData[i].id > 151 && this.state.pokeData[i].id <= 251 ? true : false;
                             break;
                         case gen === 3 || gen === '3':
                             isCorrectCard = this.state.pokeData[i].id > 251 && this.state.pokeData[i].id <= 386 ? true : false;
@@ -408,7 +409,6 @@ class App extends React.Component {
                     };
 
                     if (!isCorrectCard) {
-                        console.log(this.state.pokeData[i].name);
                         //remove el from display
                         let parent = document.querySelector('.main-display');
                         parent.childNodes[i].style.display = 'none';
