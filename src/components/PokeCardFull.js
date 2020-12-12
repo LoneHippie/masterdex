@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/_pokecard__full.scss';
 import '../styles/_pokecard__full--detailed-info.scss';
 
@@ -7,6 +7,8 @@ const PokeCardFull = (props) => {
     //Note 2/12/20 ::: cool new properties to get info from:
         //pokemon.genera[7](7 is english).genus - string describing pokemon genus ('Seed Pokemon', 'Embrace Pokemon', etc)
         //pokemon.is_legendary/.is_mythical - returns true/false for these
+
+    //Note 12/12/20 ::: GenIndex now working as intended. Might be some issue with the second pokemon.moves.forEach method, but not critical. Look into later when refactoring
 
     const { pokemon, pokemonIndex, moves, styles, textColor, getContrastBg, typeListText, abilityListText } = props;
     const [gen, setGen] = useState(1);
@@ -84,9 +86,9 @@ const PokeCardFull = (props) => {
     });
 
     //changes pokemon.moves.move.version_group_details.version_group.name to number equal to gen
-    pokemon.moves.forEach(el => {
-        el.version_group_details.map(el => {
-            switch(true) {
+    pokemon.moves.forEach((move, val) => {
+        move.version_group_details.map((el, index) => {
+            switch(true) { //also deletes items that aren't gen 1-7 since colosseum and xd are not relevant and 8 has no move data
                 case el.version_group.name === 'red-blue':
                     return el.version_group.name = 1;
                 case el.version_group.name === 'yellow':
@@ -114,24 +116,44 @@ const PokeCardFull = (props) => {
                 case el.version_group.name === 'x-y':
                     return el.version_group.name = 6;
                 case el.version_group.name === 'omega-ruby-alpha-sapphire':
-                    return el.version_group.name =6;
+                    return el.version_group.name = 6;
                 case el.version_group.name === 'sun-moon':
                     return el.version_group.name = 7;
                 case el.version_group.name === 'ultra-sun-ultra-moon':
                     return el.version_group.name = 7;
+
+                case el.version_group.name === 'colosseum':
+                    return move.version_group_details.splice(index, 1);
+                case el.version_group.name === 'xd':
+                    return move.version_group_details.splice(index, 1);
             };
         });
+
+        //removes any moves that were only xd or col
+        if (move.version_group_details.length === 0) {
+            pokemon.moves.splice(val, 1);
+        }
+
     });
 
-    //closest I've got it to working so far. Disabled for current push to master
-    // pokemon.moves.forEach(move => {
-    //     move.version_group_details.map((el, val) => {
-    //         switch(true) {
-    //             case el.move_learn_method.name === 'level-up' && el.version_group.name === gen:
-    //                 return move.genIndex = val;
-    //         };
-    //     });
-    // });
+    //attempt to filter out different versions of moves from the same generations
+    //this works, but PAY ATTENTION for any irregulatities
+    pokemon.moves.forEach((move) => {
+        if (move.version_group_details.length > 1 && move.version_group_details !== undefined) {
+            for (let i = 1; i < move.version_group_details.length; i++) {
+                //if current index and previous index contain the same gen name:
+                if (move.version_group_details[i].version_group.name === move.version_group_details[i - 1].version_group.name) {
+                    move.version_group_details.splice(i, 1);
+                }
+            }
+            for (let i = 1; i < move.version_group_details.length; i++) {
+                //if current index and previous index contain the same gen name:
+                if (move.version_group_details[i].version_group.name === move.version_group_details[i - 1].version_group.name) {
+                    move.version_group_details.splice(i, 1);
+                }
+            }
+        }
+    });
 
     //function for toggling between base stat and move pool view
     function toggleDisplay() {
@@ -239,23 +261,31 @@ const PokeCardFull = (props) => {
         return selectOptions;
     };
 
-    //splitting current pokemon move list by learn method for organization
-    const movesLevel = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'level-up');
-    const movesMachine = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'machine');
-    const movesTutor = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'tutor');
-    const movesEgg = pokemon.moves.filter(el => el.version_group_details[0].move_learn_method.name === 'egg');
-
     //function for generation move pool
-    const movePool = (input) => { //input = pokemon.moves, eventually replace the index for method and details with gen index
-
-        //filters out moves that don't exist in whatever gen is currently selected per pokemon
+    const movePool = (input, learnMethod) => {
+        //filters moves not in current selected gen
         input = input.filter((el) => {
             let id = parseInt(el.move.url.slice(31).slice(0, -1), 10);
-
+    
             if (moves[id].generation_id <= gen) {
                 return el;
             };
         });
+
+        //filter for each learn method argument
+        input = input.filter(el => el.version_group_details[0].move_learn_method.name === learnMethod);
+
+        //gets genIndex for each lvl move to select the right index for levels in different gens
+        if (learnMethod === 'level-up') {
+            input.forEach(move => {
+                move.version_group_details.map((el, val) => {
+                    switch(true) {
+                        case el.move_learn_method.name === 'level-up' && el.version_group.name === parseInt(gen, 10):
+                            return move.genIndex = val;
+                    };
+                });
+            });
+        };
 
         //this can be used for styling specific to move type
         const moveTypeColor = (el) => {
@@ -296,26 +326,25 @@ const PokeCardFull = (props) => {
             };
         };
 
-        //sorting all moves first by learn method, then by level
-        input.sort((a, b) => {
-            return b.version_group_details[0].move_learn_method.name.length - a.version_group_details[0].move_learn_method.name.length;
-        });
-
+        //sorting all level-up moves by level
         input.sort((a, b) => {
             if (a.version_group_details[0].move_learn_method.name === 'level-up') {
-                return a.version_group_details[0].level_learned_at - b.version_group_details[0].level_learned_at;
+                let genIndexA = a.genIndex !== undefined ? a.genIndex : 0;
+                let genIndexB = b.genIndex !== undefined ? b.genIndex: 0;
+                return a.version_group_details[genIndexA].level_learned_at - b.version_group_details[genIndexB].level_learned_at;
             } else {
                 return 0;
             }
         });
 
-        // let genIndex = (el) => el.genIndex === undefined ? 0 : el.genIndex;
+        //setting genIndex incase intial render is undefined
+        let genIndex = (el) => el.genIndex === undefined ? 0 : el.genIndex;
 
         return input.map((el, index) => 
             <div className="move" key={`pk-move-${index}`} style={{background: eval(`styles.gradient_${moveTypeColor(el)}`), color: textColor(moveTypeColor(el)), border: `2px solid ${textColor(typeName)}`}}>
                 <div className="move__info" key={`pk-move-info-top-${index}`}>
                     <span className="move__info--learn-lvl" key={`pk-learn-level-${index}`}>
-                        lvl {el.version_group_details[0].level_learned_at === 0 ? '-' : el.version_group_details[0].level_learned_at}
+                        lvl {el.version_group_details[genIndex(el)].level_learned_at === 0 ? '-' : el.version_group_details[genIndex(el)].level_learned_at}
                     </span>
                     <span className="move__info--learn-method" key={`pk-learn-method-${index}`}>
                         {el.version_group_details[0].move_learn_method.name}
@@ -335,6 +364,8 @@ const PokeCardFull = (props) => {
             </div>
         );
     };
+
+////////// Final return for each card //////////
 
     return (
         <section className="pokecard-full" key={`pokemon-full-${pokemonIndex}`} id={`full-display-pk-${pokemon.id}`} style={{background: eval(`styles.solid_${typeName}`)}}>
@@ -379,7 +410,7 @@ const PokeCardFull = (props) => {
                     alt={`sprite for ${pokemon.name}`}
                     className="pokecard-full__visual--sprite"
                     style={{filter: `drop-shadow(1.5px 3px 3px #2F4F4F`}}
-                    onClick={() => console.log(pokemon)}
+                    onClick={() => console.log(pokemon.moves)}
                 />
 
             </div>
@@ -414,31 +445,32 @@ const PokeCardFull = (props) => {
                     </div>
 
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
-                        {movePool(movesLevel).length === 0 ? '' : 'Learned Naturally:'}
+                        {movePool(pokemon.moves, 'level-up').length === 0 ? '' : 'Learned Naturally:'}
                     </span>
-                    <div className="move-display--section">
-                        {movePool(movesLevel)}
-                    </div>
 
+                    <div className="move-display--section">
+                        {movePool(pokemon.moves, 'level-up')}
+                    </div>
+                    
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
-                        {movePool(movesMachine).length === 0 ? '' : 'TM/TM:'}
+                        {movePool(pokemon.moves, 'machine').length === 0 ? '' : 'TM/TM:'}
                     </span>                   
                     <div className="move-display--section">
-                        {movePool(movesMachine)}
+                        {movePool(pokemon.moves, 'machine')}
                     </div>
 
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
-                        {movePool(movesTutor).length === 0 ? '' : 'Tutor Moves:'}
+                        {movePool(pokemon.moves, 'tutor').length === 0 ? '' : 'Tutor Moves:'}
                     </span>
                     <div className="move-display--section">
-                        {movePool(movesTutor)}
+                        {movePool(pokemon.moves, 'tutor')}
                     </div>
 
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
-                        {movePool(movesEgg).length === 0 ? '' : 'Egg Moves:'}
+                        {movePool(pokemon.moves, 'egg').length === 0 ? '' : 'Egg Moves:'}
                     </span>                   
                     <div className="move-display--section">
-                        {movePool(movesEgg)}
+                        {movePool(pokemon.moves, 'egg')}
                     </div>    
 
                 </section>
