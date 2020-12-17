@@ -171,6 +171,14 @@
             filter: blur(0.2px) contrast(130%);
         }
 
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+
         &--gens {
             appearance: none;
             width: 100%; 
@@ -242,6 +250,14 @@
         max-height: 10rem;
         min-height: 10rem;
     }
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 
     cursor: pointer;
 
