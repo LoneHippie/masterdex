@@ -114,20 +114,7 @@ const PokeCard = (props) => {
         );
     };
 
-    //function for getting JSX div list of ability names
-    const abilityListText = (input, type) => {
-        let abilities = [];
-
-        for (let i = 0; i < input.length; i++) {
-            abilities.push(input[i].ability.name);
-        };
-
-        return abilities.map((input, index) => 
-            <div key={`pk-ability-text-${index}`} className="pokecard-full__general-info__ability-container--ability" style={{background: getContrastBg(type), border: `2px solid ${textColor(type)}`}}>
-                {input}
-            </div>
-        );
-    };
+    
 
     //functions for click events toggling display for full pokemon cards
     function openFullDisplay(e) {
@@ -173,7 +160,6 @@ const PokeCard = (props) => {
                     textColor={textColor}
                     getContrastBg={getContrastBg}
                     typeListText={typeListText}
-                    abilityListText={abilityListText}
                     closeFullDisplay={closeDisplayViaX} //special function for closing full display specifically with X button
                 />
 

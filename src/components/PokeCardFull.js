@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MoveDetails from './MoveDetails';
+import AbilityDetails from './AbilityDetails';
 import pokeapi from '../api/pokeapi';
 
 import '../styles/_pokecard__full.scss';
@@ -13,8 +14,10 @@ const PokeCardFull = (props) => {
 
     //Note 12/12/20 ::: GenIndex now working as intended. Might be some issue with the second pokemon.moves.forEach method, but not critical. Look into later when refactoring
 
-    const { pokemon, pokemonIndex, moves, styles, textColor, getContrastBg, typeListText, abilityListText } = props;
+    const { pokemon, pokemonIndex, moves, styles, textColor, getContrastBg, typeListText } = props;
     const [gen, setGen] = useState(1);
+    //hook for getting more specific API data to pass to AbilityDetails.js
+    const [abilityDetails, setAbilityDetails] = useState(undefined);
     //hooks for getting move specific API data to pass to MoveDetails.js and to add conditional render abilities
     const [moveDetails, setMoveDetails] = useState(undefined);
     const [renderDetails, setRenderDetails] = useState(false);
@@ -46,6 +49,11 @@ const PokeCardFull = (props) => {
     async function getMoveDetails (input) {
         const details = await pokeapi.get(`/move/${input}`);
         setMoveDetails(details.data);
+    };
+
+    async function getAbilityDetails (input) {
+        const details = await pokeapi.get(`/ability/${input}`);
+        setAbilityDetails(details.data);
     };
 
     //primary type name for pokemon
@@ -180,6 +188,63 @@ const PokeCardFull = (props) => {
             statDisplay.style.display = "none";
             moveDisplay.style.display = "flex";
         };
+    };
+
+    //function for getting JSX div list of ability names
+    const abilityListText = (input) => {
+        let abilities = [];
+
+        for (let i = 0; i < input.length; i++) {
+            abilities.push(input[i].ability.name);
+        };
+
+        function openAbilityDescription (e) {
+            document.getElementById(`details-${e.currentTarget.id}`).style.display = "flex";
+            document.getElementById(`blur-details-${e.currentTarget.id}`).style.display = "block";
+
+            let abilityName = e.currentTarget.id.slice(8);
+            abilityName = abilityName.replace(/[0-9]/g, '').slice(0, -1);
+
+            getAbilityDetails(abilityName);
+            setRenderDetails(true);
+        };
+
+        function closeAbilityDescription (e) {
+            e.stopPropagation(); //stops event bubbling from resetting the display
+            document.getElementById(`${e.currentTarget.id}`).style.display = "none";
+            document.getElementById(`${e.currentTarget.id.slice(5)}`).style.display = "none";
+
+            //reset
+            setRenderDetails(false);
+            setAbilityDetails(undefined);
+        };
+
+        return abilities.map((input, index) => 
+            <div className="ability-flex-container">
+                <div 
+                    key={`pk-ability-text-${index}`} 
+                    className="pokecard-full__general-info__ability-container--ability" 
+                    id={`ability-${input}-${pokemonIndex}`}
+                    onClick={openAbilityDescription}
+                    style={{
+                        background: getContrastBg(typeName),
+                        border: `2px solid ${textColor(typeName)}`
+                    }}>
+                    {input}
+                </div>
+                <AbilityDetails 
+                    ability={input}
+                    abilityDetails={abilityDetails}
+                    renderDetails={renderDetails}
+                    pokemonIndex={pokemonIndex}
+                    getContrastBg={getContrastBg}
+                    textColor={textColor}
+                    typeName={typeName}
+                />
+                <div className="pokecard-full__general-info__ability-container--blur" id={`blur-details-ability-${input}-${pokemonIndex}`} onClick={closeAbilityDescription}>
+                </div>
+            </div>
+        );
     };
 
     //function for getting JSX for stat bars. Starting point = el.data.stats for input
@@ -446,9 +511,7 @@ const PokeCardFull = (props) => {
 
                 <div className="pokecard-full__general-info__ability-container">
                     <span>Abilities:</span>
-                    <div className="ability-flex-container" >
-                        {abilityListText(pokemon.abilities, typeName)}
-                    </div>
+                    {abilityListText(pokemon.abilities, typeName)}
                 </div>
 
             </div>

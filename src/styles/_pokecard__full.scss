@@ -91,8 +91,10 @@
         }
 
         &__ability-container {
+            position: relative;
             display: flex;
             flex-direction: column;
+            backface-visibility: none;
 
             span {
                 margin-right: 1rem;
@@ -114,6 +116,73 @@
                 text-align: center;
                 font-size: 2.5rem;
                 text-transform: capitalize;
+            }
+
+            &__details {
+                position: absolute;
+                opacity: 0.925;
+                display: none;
+                flex-direction: column;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 0.9rem;
+                box-shadow: 2px 2px 8px rgba(black, 0.6);
+                overflow: hidden;
+                backface-visibility: hidden;
+
+                animation: pullUp 400ms ease-out;
+
+                @include respond(tablet-1) {
+                    animation: slideFromLeft 400ms ease-out;
+                }
+
+                z-index: 2000;
+
+                &--title {
+                    margin: 0 auto;
+                    text-transform: capitalize;
+                    margin-bottom: 1rem;
+                    width: 100%;
+                    height: 33%;
+                    padding: 0 6.25%;
+                    font-size: 3.25rem;
+                    opacity: 1;
+
+                    -webkit-clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+                    clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+                }
+
+                &--effect {
+                    height: 67%;
+                    font-size: 2.5rem;
+                    padding: 0rem 0.75rem;
+                    padding-bottom: 0.5rem;
+                    overflow-y: scroll;
+                    text-transform: initial;
+                }
+
+                &--loading {
+                    display: inline-block;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 4rem;
+                }
+            }
+
+            &--blur {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(black, 0.35);
+
+                z-index: 1500;
             }
         }
     }
@@ -190,5 +259,35 @@
     }
     80% {
         transform: translateY(0);
+    }
+}
+
+@keyframes pullUp {
+    0% {
+        transform: translateY(8rem);
+    }
+    50% {
+        transform: translateY(-53%);
+    }
+    75% {
+        transform: translateY(-57%);
+    }
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+@keyframes slideFromLeft {
+    0% {
+        transform: translateX(-15rem);
+    }
+    40% {
+        transform: translateX(20%);
+    }
+    65% {
+        transform: translateX(25%);
+    }
+    100% {
+        transform: translateX(0);
     }
 }

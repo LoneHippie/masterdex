@@ -13,7 +13,7 @@ const Welcome = () => {
             <article className="welcome-container">
                 <h1 className="welcome-container--title">WELCOME&nbsp;TRAINER</h1>
                 <p className="welcome-container--paragraph">
-                    Welcome to Masterdex, a handly detailed pokedex webapp! Here you can find detailed information on any pokemon from every generation either by search or browsing. If this is your first time using Masterdex, please read the instructions below before hitting continue.
+                    Welcome to Masterdex, a simple but detailed pokedex webapp! Here you can find detailed information on any pokemon from every generation either by search or browsing. If this is your first time using Masterdex, please read the instructions below before hitting continue.
                 </p>
                 <h2 className="welcome-container--instruction-title">SEARCHING</h2>
                 <ul className="welcome-container__instruction-list">
@@ -37,6 +37,9 @@ const Welcome = () => {
                     </li>
                     <li className="welcome-container__instruction-list--item">
                         While viewing a pokemon's moves, select any move to view more detailed information
+                    </li>
+                    <li className="welcome-container__instruction-list--item">
+                        You can also get detailed information on any ability by selecting it
                     </li>
                     <li className="welcome-container__instruction-list--item">
                         NOTE: abilities and moves for generation 8 pokemon are currently unavailable
