@@ -14,6 +14,8 @@
     backface-visibility: hidden;
     overflow: hidden;
 
+    cursor: default;
+
     animation: slideTop 400ms ease-out;
 
     @include respond(laptop-1) {

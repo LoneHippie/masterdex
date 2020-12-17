@@ -61,6 +61,10 @@
         overflow: hidden; 
         border-radius: 20px;
 
+        &:hover {
+            filter: blur(0.2px) contrast(130%);
+        }
+
         &--gens {
             appearance: none;
             width: 100%; 

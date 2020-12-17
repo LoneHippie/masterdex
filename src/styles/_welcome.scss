@@ -16,6 +16,8 @@
     color: $color-text-gray-dark;
     overflow-y: scroll;
 
+    cursor: default;
+
     @include respond(tablet-1) {
         width: 85%;
         height: 92.5%;
