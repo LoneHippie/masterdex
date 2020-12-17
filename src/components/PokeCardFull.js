@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import MoveDetails from './MoveDetails';
+import pokeapi from '../api/pokeapi';
+
 import '../styles/_pokecard__full.scss';
 import '../styles/_pokecard__full--detailed-info.scss';
 
@@ -12,6 +15,9 @@ const PokeCardFull = (props) => {
 
     const { pokemon, pokemonIndex, moves, styles, textColor, getContrastBg, typeListText, abilityListText } = props;
     const [gen, setGen] = useState(1);
+    //hooks for getting move specific API data to pass to MoveDetails.js and to add conditional render abilities
+    const [moveDetails, setMoveDetails] = useState(undefined);
+    const [renderDetails, setRenderDetails] = useState(false);
 
     //initializes gen hook for each pokemon
     function initGen(input) {
@@ -35,6 +41,12 @@ const PokeCardFull = (props) => {
         };
     };
     initGen(pokemon);
+
+    //function for getting data for moveDetails.js
+    async function getMoveDetails (input) {
+        const details = await pokeapi.get(`/move/${input}`);
+        setMoveDetails(details.data);
+    };
 
     //primary type name for pokemon
     let typeName = pokemon.types[0].type.name;
@@ -220,6 +232,7 @@ const PokeCardFull = (props) => {
         
     };    
 
+    //function for getting generation select options in movepools
     const getGenSelect = (input) => {
 
         //changes current pokemon.generation.name to number value corresponding to generation number
@@ -340,8 +353,36 @@ const PokeCardFull = (props) => {
         //setting genIndex incase intial render is undefined
         let genIndex = (el) => el.genIndex === undefined ? 0 : el.genIndex;
 
+        function openMoveDescription (e) {
+            document.getElementById(`desc-${e.currentTarget.id}`).style.display = "flex";
+            document.getElementById(`blur-desc-${e.currentTarget.id}`).style.display = "block";
+
+            let moveId = e.currentTarget.id.slice(5);
+            moveId = moveId.replace(/[0-9]/g, '').slice(0, -1);
+
+            getMoveDetails(moveId);
+
+            setRenderDetails(true);
+        };
+
+        function closeMoveDescription (e) {
+            e.stopPropagation();
+            document.getElementById(`${e.currentTarget.id.slice(5)}`).style.display = "none";
+            document.getElementById(`${e.currentTarget.id}`).style.display = "none";
+
+            setRenderDetails(false);
+        };
+
         return input.map((el, index) => 
-            <div className="move" key={`pk-move-${index}`} style={{background: eval(`styles.gradient_${moveTypeColor(el)}`), color: textColor(moveTypeColor(el)), border: `2px solid ${textColor(typeName)}`}}>
+            <div className="move" 
+                key={`pk-move-${index}`}
+                id={`move-${el.move.name}-${pokemonIndex}`}
+                onClick={(e) => openMoveDescription(e)}
+                style={{
+                    background: eval(`styles.gradient_${moveTypeColor(el)}`),
+                    color: textColor(moveTypeColor(el)),
+                    border: `2px solid ${textColor(typeName)}`
+                }}>
                 <div className="move__info" key={`pk-move-info-top-${index}`}>
                     <span className="move__info--learn-lvl" key={`pk-learn-level-${index}`}>
                         lvl {el.version_group_details[genIndex(el)].level_learned_at === 0 ? '-' : el.version_group_details[genIndex(el)].level_learned_at}
@@ -360,6 +401,21 @@ const PokeCardFull = (props) => {
                     <span className="move__info--category">
                         {moveCategory(el)}
                     </span>
+                </div>
+                <MoveDetails 
+                    movesJSON={moves}
+                    move={el}
+                    moveDetails={moveDetails}
+                    renderDetails={renderDetails}
+                    pokemonIndex={pokemonIndex}
+                    PP={movePP(el)}
+                    genIndex={genIndex(el)}
+                    styles={styles}
+                    textColor={textColor}
+                    getContrastBg={getContrastBg}
+                    typeName={typeName}
+                />
+                <div className="move-details-blur" id={`blur-desc-move-${el.move.name}-${pokemonIndex}`} onClick={closeMoveDescription}>
                 </div>
             </div>
         );
@@ -410,7 +466,6 @@ const PokeCardFull = (props) => {
                     alt={`sprite for ${pokemon.name}`}
                     className="pokecard-full__visual--sprite"
                     style={{filter: `drop-shadow(1.5px 3px 3px #2F4F4F`}}
-                    onClick={() => console.log(pokemon.moves)}
                 />
 
             </div>
