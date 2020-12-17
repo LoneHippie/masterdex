@@ -4,7 +4,7 @@ import '../styles/_move-details.scss';
 
 const MoveDetails = (props) => {
 
-    const { move, moveDetails, renderDetails, movesJSON, pokemonIndex, PP, gen, genIndex, styles, textColor, getContrastBg, typeName } = props;
+    const { move, moveDetails, renderDetails, pokemonIndex, textColor, getContrastBg, typeName } = props;
     //id that can be used to get the right index of movesJSON for that info
     let id = parseInt(move.move.url.slice(31).slice(0, -1), 10);
 
@@ -46,8 +46,8 @@ const MoveDetails = (props) => {
             <div className="move-details" id={`desc-move-${move.move.name}-${pokemonIndex}`} style={{background: getContrastBg(typeName), color: textColor(typeName)}}>
                 <span className="move-details--loading">Loading...</span>
             </div>
-        )
-    }
+        );
+    };
 };
 
 export default MoveDetails;

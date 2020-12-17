@@ -241,7 +241,7 @@ const PokeCardFull = (props) => {
                     textColor={textColor}
                     typeName={typeName}
                 />
-                <div className="pokecard-full__general-info__ability-container--blur" id={`blur-details-ability-${input}-${pokemonIndex}`} onClick={closeAbilityDescription}>
+                <div className="pokecard-full__general-info__ability-container--blur" key={`pk-ability-blur-${index}`} id={`blur-details-ability-${input}-${pokemonIndex}`} onClick={closeAbilityDescription}>
                 </div>
             </div>
         );
@@ -470,20 +470,15 @@ const PokeCardFull = (props) => {
                     </span>
                 </div>
                 <MoveDetails 
-                    movesJSON={moves}
                     move={el}
                     moveDetails={moveDetails}
                     renderDetails={renderDetails}
                     pokemonIndex={pokemonIndex}
-                    gen={gen}
-                    PP={movePP(el)}
-                    genIndex={genIndex(el)}
-                    styles={styles}
                     textColor={textColor}
                     getContrastBg={getContrastBg}
                     typeName={typeName}
                 />
-                <div className="move-details-blur" id={`blur-desc-move-${el.move.name}-${pokemonIndex}`} onClick={closeMoveDescription}>
+                <div className="move-details-blur" key={`move-blur-${pokemonIndex}`} id={`blur-desc-move-${el.move.name}-${pokemonIndex}`} onClick={closeMoveDescription}>
                 </div>
             </div>
         );
@@ -494,22 +489,28 @@ const PokeCardFull = (props) => {
     return (
         <section className="pokecard-full" key={`pokemon-full-${pokemonIndex}`} id={`full-display-pk-${pokemon.id}`} style={{background: eval(`styles.solid_${typeName}`)}}>
 
-            <strong className="pokecard-full--exit" style={{color: textColor(typeName)}} id={`close-display-pk-${pokemon.id}`} onClick={props.closeFullDisplay}>x</strong>
+            <strong className="pokecard-full--exit" key={`pk-name-full-${pokemonIndex}`} style={{color: textColor(typeName)}} id={`close-display-pk-${pokemon.id}`} onClick={props.closeFullDisplay}>x</strong>
                     
             <div className="pokecard-full__general-info" style={{color: textColor(typeName)}}>
 
-                <div className="pokecard-full__general-info--id">{`Game ID: #${pokemon.id}`}</div>
-                <div className="pokecard-full__general-info--height">{`Height: ${pokemon.height / 10}m`}</div>
-                <div className="pokecard-full__general-info--weight">{`Weight: ${pokemon.weight / 10}kg`}</div>
+                <div className="pokecard-full__general-info--id" key={`pk-full-id-${pokemonIndex}`}>
+                    {`Game ID: #${pokemon.id}`}
+                </div>
+                <div className="pokecard-full__general-info--height" key={`pk-full-height-${pokemonIndex}`}>
+                    {`Height: ${pokemon.height / 10}m`}
+                </div>
+                <div className="pokecard-full__general-info--weight" key={`pk-full-weight-${pokemonIndex}`}>
+                    {`Weight: ${pokemon.weight / 10}kg`}
+                </div>
 
-                <div className="pokecard-full__general-info__type-container">
+                <div className="pokecard-full__general-info__type-container" key={`pk-type-container-${pokemonIndex}`}>
                     <span>Type:</span>
-                    <div style={{color: textColor(typeName)}}>
+                    <div style={{color: textColor(typeName)}} key={`type-color-container-${pokemonIndex}`}>
                         {typeListText(pokemon.types, typeName)}
                     </div>
                 </div>
 
-                <div className="pokecard-full__general-info__ability-container">
+                <div className="pokecard-full__general-info__ability-container" key={`pk-ability-container-${pokemonIndex}`}>
                     <span>Abilities:</span>
                     {abilityListText(pokemon.abilities, typeName)}
                 </div>
@@ -536,9 +537,9 @@ const PokeCardFull = (props) => {
 
             </div>
 
-            <div className="pokecard-full__detailed-info">
+            <div className="pokecard-full__detailed-info" key={`pk-full-detailed-${pokemonIndex}`}>
 
-                <section className="info-toggle" style={{color: textColor(typeName)}}>
+                <section className="info-toggle" style={{color: textColor(typeName)}} key={`info-toggle-${pokemonIndex}`}>
                     <span className="info-toggle--current-label">Stats</span>
                     <input type="checkbox" id={`switch-${pokemonIndex}`} className="info-toggle--switch" onChange={toggleDisplay}/>
                     <label htmlFor={`switch-${pokemonIndex}`} className="info-toggle--switch--label"></label>
@@ -551,10 +552,11 @@ const PokeCardFull = (props) => {
 
                 <section className="move-display" id={`move-display-${pokemonIndex}`}>
 
-                    <div className="move-display__custom-select">
+                    <div className="move-display__custom-select" key={`move-gen-select-${pokemonIndex}`}>
                         <label htmlFor="move-gen-select" style={{display: 'none'}}>Generation select for this pokemon's moves</label>
                         <select
                             className="move-display__custom-select--gens"
+                            key={`gen-select-custom-${pokemonIndex}`}
                             id="move-gen-select"
                             style={{
                                 color: textColor(typeName),
@@ -570,29 +572,28 @@ const PokeCardFull = (props) => {
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
                         {movePool(pokemon.moves, 'level-up').length === 0 ? '' : 'Learned Naturally:'}
                     </span>
-
-                    <div className="move-display--section">
+                    <div className="move-display--section" key={`moves-lvl-${pokemonIndex}`}>
                         {movePool(pokemon.moves, 'level-up')}
                     </div>
                     
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
                         {movePool(pokemon.moves, 'machine').length === 0 ? '' : 'TM/TM:'}
                     </span>                   
-                    <div className="move-display--section">
+                    <div className="move-display--section" key={`moves-machine-${pokemonIndex}`}>
                         {movePool(pokemon.moves, 'machine')}
                     </div>
 
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
                         {movePool(pokemon.moves, 'tutor').length === 0 ? '' : 'Tutor Moves:'}
                     </span>
-                    <div className="move-display--section">
+                    <div className="move-display--section" key={`moves-tutor-${pokemonIndex}`}>
                         {movePool(pokemon.moves, 'tutor')}
                     </div>
 
                     <span className="move-display--title" style={{color: textColor(typeName)}}>
                         {movePool(pokemon.moves, 'egg').length === 0 ? '' : 'Egg Moves:'}
                     </span>                   
-                    <div className="move-display--section">
+                    <div className="move-display--section" key={`moves-egg-${pokemonIndex}`}>
                         {movePool(pokemon.moves, 'egg')}
                     </div>    
 

@@ -114,8 +114,6 @@ const PokeCard = (props) => {
         );
     };
 
-    
-
     //functions for click events toggling display for full pokemon cards
     function openFullDisplay(e) {
         document.getElementById(`full-display-${e.target.id}`).style.display = "flex";
