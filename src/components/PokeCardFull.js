@@ -410,6 +410,7 @@ const PokeCardFull = (props) => {
                     moveDetails={moveDetails}
                     renderDetails={renderDetails}
                     pokemonIndex={pokemonIndex}
+                    gen={gen}
                     PP={movePP(el)}
                     genIndex={genIndex(el)}
                     styles={styles}
