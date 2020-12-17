@@ -217,11 +217,11 @@ const PokeCardFull = (props) => {
             stats.jsx.push(
                 <div className="stat" key={`stat-${stats.name[i]}`}>
                     <div className="stat__container" key={`stat-container-${stats.name[i]}`} style={{border: `2px solid ${textColor(typeName)}`}}>
-                        <div className="stat__container--stat" key={`stat-bar-${stats.name[i]}`} id={`stat-bar-${stats.name[i]}`} style={{width: stats.percentage[i], background: getContrastBg(typeName)}}>
+                        <div className="stat__container--stat" key={`stat-bar-${stats.name[i]}`} id={`stat-bar-${stats.name[i]}-${pokemonIndex}`} style={{width: stats.percentage[i], background: getContrastBg(typeName)}}>
                             <strong className="stat__container--stat--value" key={`stat-bar-value-${stats.name[i]}`}>{stats.value[i]}</strong>
                         </div>
                     </div>
-                    <label className="stat--label" key={`stat-label-${stats.name[i]}`} htmlFor={`stat-bar-${stats.name[i]}`}>
+                    <label className="stat--label" key={`stat-label-${stats.name[i]}`} htmlFor={`stat-bar-${stats.name[i]}-${pokemonIndex}`}>
                         {stats.name[i]}
                     </label>
                 </div>
@@ -488,8 +488,10 @@ const PokeCardFull = (props) => {
                 <section className="move-display" id={`move-display-${pokemonIndex}`}>
 
                     <div className="move-display__custom-select">
+                        <label htmlFor="move-gen-select" style={{display: 'none'}}>Generation select for this pokemon's moves</label>
                         <select
                             className="move-display__custom-select--gens"
+                            id="move-gen-select"
                             style={{
                                 color: textColor(typeName),
                                 background: getContrastBg(typeName),
