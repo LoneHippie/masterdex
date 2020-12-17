@@ -27,13 +27,16 @@ const Welcome = () => {
                         At the bottom of the screen you can also show all pokemon from a specific game generation by simply selecting that generation from the list
                     </li>
                     <li className="welcome-container__instruction-list--item">
-                        To show more pokemon in sequential order, just click the "SHOW MORE" button
+                        To show more pokemon in sequential order, just select the "SHOW MORE" button
                     </li>
                 </ul>
                 <h2 className="welcome-container--instruction-title">DETAILED&nbsp;INFO</h2>
                 <ul className="welcome-container__instruction-list">
                     <li className="welcome-container__instruction-list--item">
-                        To get detailed info about any pokemon, click the card displayed on screen to open a full display of that pokemon's details, moves and stats
+                        To get detailed info about any pokemon, select the card displayed on screen to open a full display of that pokemon's details, moves and stats
+                    </li>
+                    <li className="welcome-container__instruction-list--item">
+                        While viewing a pokemon's moves, select any move to view more detailed information
                     </li>
                     <li className="welcome-container__instruction-list--item">
                         NOTE: abilities and moves for generation 8 pokemon are currently unavailable

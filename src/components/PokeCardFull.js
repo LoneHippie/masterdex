@@ -357,20 +357,22 @@ const PokeCardFull = (props) => {
             document.getElementById(`desc-${e.currentTarget.id}`).style.display = "flex";
             document.getElementById(`blur-desc-${e.currentTarget.id}`).style.display = "block";
 
+            //moveId should always be the move id extracted from the div id name
             let moveId = e.currentTarget.id.slice(5);
             moveId = moveId.replace(/[0-9]/g, '').slice(0, -1);
 
             getMoveDetails(moveId);
-
             setRenderDetails(true);
         };
 
         function closeMoveDescription (e) {
-            e.stopPropagation();
+            e.stopPropagation(); //stops event bubbling from resetting the display
             document.getElementById(`${e.currentTarget.id.slice(5)}`).style.display = "none";
             document.getElementById(`${e.currentTarget.id}`).style.display = "none";
 
+            //reset
             setRenderDetails(false);
+            setMoveDetails(undefined);
         };
 
         return input.map((el, index) => 
