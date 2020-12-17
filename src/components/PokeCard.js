@@ -70,9 +70,9 @@ const PokeCard = (props) => {
     //text color changer for managing background contrast
     const textColor = (type) => {
         if (type === 'grass' || type === 'water' || type === 'poison' || type === 'fighting' || type === 'dragon' || type === 'dark' || type === 'ghost' || type === 'psychic') {
-            return '#DCDCDC';
+            return 'rgba(220, 220, 220, 1)';
         } else {
-            return '#2F4F4F';
+            return 'rgba(47, 79, 79, 1)';
         };
     };
 
