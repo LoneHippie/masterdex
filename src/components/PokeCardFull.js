@@ -484,11 +484,11 @@ const PokeCardFull = (props) => {
         );
     };
 
-    const fullStyle = (type) => {
+    const doubleGradient = (type) => {
         let typeColor = eval(`styles.solid_${type}`);
         let bgColor = getContrastBg(type);
 
-        let fullGradient = `linear-gradient(122deg, ${bgColor} 0%, ${bgColor} 36.5%, transparent 37%), linear-gradient(to bottom left, ${typeColor}, ${typeColor})`;
+        let fullGradient = `linear-gradient(122deg, ${bgColor} 0%, ${bgColor} 36.75%, transparent 37%), linear-gradient(${typeColor}, ${typeColor})`;
 
         return fullGradient;
     };
@@ -496,7 +496,7 @@ const PokeCardFull = (props) => {
 ////////// Final return for each card //////////
 
     return (
-        <section className="pokecard-full" key={`pokemon-full-${pokemonIndex}`} id={`full-display-pk-${pokemon.id}`} style={{backgroundImage: fullStyle(typeName)}}>
+        <section className="pokecard-full" key={`pokemon-full-${pokemonIndex}`} id={`full-display-pk-${pokemon.id}`} style={{background: window.innerWidth === 414 || window.innerWidth === 375 || window.innerWidth === 320 ? eval(`styles.gradient_bg_${typeName}`) : doubleGradient(typeName)}}>
 
             <strong className="pokecard-full--exit" key={`pk-name-full-${pokemonIndex}`} style={{color: textColor(typeName)}} id={`close-display-pk-${pokemon.id}`} onClick={props.closeFullDisplay}>x</strong>
                     
