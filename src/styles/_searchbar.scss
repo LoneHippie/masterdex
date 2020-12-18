@@ -24,6 +24,9 @@
         @include respond(phone-3) {
             margin-left: 1.5rem;
         }
+        @include ios(iphone-plus) {
+            margin-left: 2rem;
+        }
 
         input {
             width: 100%;
@@ -37,6 +40,22 @@
                 height: 5rem;
                 font-size: 4rem;
                 padding-bottom: 0.5rem;
+            }
+            @include ios(iphone-plus) {
+                height: 4rem;
+                font-size: 3rem;
+                padding-bottom: 0rem;
+            }
+            @include ios(iphone-8) {
+                height: 3.8rem;
+                font-size: 2.75rem;
+                padding-bottom: 0rem;
+            }
+            @include ios(se) {
+                height: 3.75rem;
+                font-size: 3rem;
+                padding-bottom: 0rem;
+                width: 17.5rem;
             }
 
             &:focus {
@@ -57,6 +76,23 @@
             font-size: 1.5rem;
             @include respond(tablet-1) { font-size: 2.2rem; }
             @include respond(tablet-1) {  margin-left: 1rem; }
+
+            @include ios(iphone-plus) { 
+                font-size: 1.5rem;
+                margin-left: 1rem;
+                letter-spacing: 0.05rem;
+            }
+            @include ios(iphone-8) {
+                font-size: 1.5rem;
+                margin-left: 1rem;
+                letter-spacing: 0.05rem;
+            }
+            @include ios(se) {
+                font-size: 1.5rem;
+                margin-left: 1rem;
+                letter-spacing: 0.05rem;
+            }
+
             font-weight: 700;
             padding: 0.5rem 1.5rem;
             display: inline-block;

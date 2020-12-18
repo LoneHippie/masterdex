@@ -168,7 +168,7 @@
         margin-bottom: 1rem;
 
         &:hover {
-            filter: blur(0.2px) contrast(130%);
+            filter: contrast(130%);
         }
 
         -webkit-touch-callout: none;
@@ -249,6 +249,24 @@
         min-width: 17.5rem;
         max-height: 10rem;
         min-height: 10rem;
+    }
+    @include ios(iphone-plus) {
+        max-width: 14rem;
+        min-width: 14rem;
+        max-height: 8rem;
+        min-height: 8rem;
+    }
+    @include ios(iphone-8) {
+        max-width: 12rem;
+        min-width: 12rem;
+        max-height: 7.5rem;
+        min-height: 7.5rem;
+    }
+    @include ios(se) {
+        max-width: 10rem;
+        min-width: 10rem;
+        max-height: 6rem;
+        min-height: 6rem;
     }
 
     -webkit-touch-callout: none;

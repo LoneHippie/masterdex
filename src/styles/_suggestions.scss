@@ -10,9 +10,25 @@
     max-height: 16.25rem;
     min-width: 15rem;
     max-width: 15rem;
+
     @include respond(tablet-1) {
         min-width: 25rem;
         max-width: 25rem;
+    }
+    @include ios(iphone-plus) {
+        min-width: 15rem;
+        max-width: 15rem;
+        margin-top: 0rem;
+    }
+    @include ios(iphone-8) {
+        min-width: 15rem;
+        max-width: 15rem;
+        margin-top: 0rem;
+    }
+    @include ios(se) {
+        min-width: 15rem;
+        max-width: 15rem;
+        margin-top: 0rem;
     }
     border-radius: 0 0 6px 6px;
     position: fixed;
@@ -21,6 +37,9 @@
     &__item {
         font-size: 2.5rem;
         @include respond(tablet-1) { font-size: 4rem; }
+        @include ios(iphone-plus) { font-size: 3rem; }
+        @include ios(iphone-8) { font-size: 3rem; }
+        @include ios(se) { font-size: 3rem; }
         color: $color-text-gray-dark;
         text-align: center;
 

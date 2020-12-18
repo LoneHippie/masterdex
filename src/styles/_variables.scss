@@ -61,3 +61,15 @@ $color-fairy: #D685AD;
 		@media (max-width: 71.875em) { @content }; //1150px
     }
 }
+
+@mixin ios($breakpoint) {
+    @if $breakpoint == iphone-8 {
+        @media (width: 23.4375em) { @content }; //375px, iphone 6-8, iphone-x, iphone-11
+    }
+    @if $breakpoint == iphone-plus {
+        @media (width: 25.875em) { @content }; //414px, iPhone-8 plus, iphone-7 plus
+    }
+    @if $breakpoint == se {
+        @media (width: 20em) { @content }; //320px, iphone-SE, iphone 2-5
+    }
+}

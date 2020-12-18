@@ -41,6 +41,18 @@
             width: 19.5rem;
             height: 30.55rem;
         }
+        @include ios(iphone-plus) {
+            width: 14.75rem;
+            height: 23.5rem;
+        }
+        @include ios(iphone-8) {
+            width: 13.5rem;
+            height: 22rem;
+        }
+        @include ios(se) {
+            width: 11.25rem;
+            height: 18rem;
+        }
 
         border-radius: 3px;
         box-shadow: -2px 2px 6px rgba($color-text-gray-dark, 0.6);
